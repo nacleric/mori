@@ -2,10 +2,10 @@
 mod unit_tests;
 use crate::error::Result;
 
-#[derive(Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct Position {
-    col: u32, // x-coord
-    row: u32, // y-coord
+    col: usize, // x-coord
+    row: usize, // y-coord
 }
 
 impl Position {
@@ -13,9 +13,10 @@ impl Position {
         Self { col: 0, row: 0 }
     }
 
-    pub fn update(&mut self, col: u32, row: u32) {
+    pub fn update(&mut self, col: usize, row: usize) -> Result<&mut Self> {
         self.col = col;
         self.row = row;
+        Ok(self)
     }
 }
 
@@ -27,7 +28,21 @@ pub struct Buffer {
 
 impl Buffer {
     pub fn new() -> Self {
-        Self { data: String::new(), pos: Position::new() }
+        Self {
+            data: String::new(),
+            pos: Position::new(),
+        }
+    }
+
+    pub fn contents(&self) -> String {
+        self.data.clone()
+    }
+
+    // Note: https://stackoverflow.com/questions/24542115/how-to-index-a-string-in-rust
+    // TODO: Might need to account for glyphs that take up 2+ characters
+    pub fn delete_glyph(&mut self) -> &mut Self {
+        self.data.clear();
+        self
     }
 
     pub fn insert_glyph(&mut self, glyph: char) -> Result<&mut Self> {
@@ -35,16 +50,8 @@ impl Buffer {
         Ok(self)
     }
 
-    // Note: https://stackoverflow.com/questions/24542115/how-to-index-a-string-in-rust
-    // TODO: Might need to account for glyphs that take up 2+ characters
-    pub fn delete_glyph(&mut self) -> Result<&mut Self> {
-        let data = self.data.chars().nth(self.pos.col as usize).unwrap();
-        // let data = self.data.chars();
-        self.pos.col -= 1;
-        Ok(self)
+    pub fn pos(&self) -> Position {
+        self.pos
     }
 
-    pub fn contents(&self) -> String {
-        self.data.clone()
-    }
 }
