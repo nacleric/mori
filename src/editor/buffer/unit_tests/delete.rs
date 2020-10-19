@@ -35,7 +35,7 @@ fn delete_glyph__deleting_a_glyph_from_experimental_data_model_removes_the_expec
 ) -> Result<()> {
     // Given
     let sentence = String::from("helloo world");
-    let expected_result = String::from("hello world");
+    let expected_result = String::from("helloo worlda");
     let mut sut = Buffer::new();
 
     // When

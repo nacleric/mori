@@ -18,6 +18,18 @@ impl Position {
         self.row = row;
         Ok(self)
     }
+
+    pub fn left(&mut self) -> Result<&mut Self> {
+        if self.col != 0 {
+            self.col -= 1;
+        }
+        Ok(self)
+    }
+
+    pub fn right(&mut self) -> Result<&mut Self> {
+        self.col += 1;
+        Ok(self)
+    }
 }
 
 #[derive(Debug, Default, Eq, PartialEq)]
@@ -46,7 +58,9 @@ impl Buffer {
     }
 
     pub fn insert_glyph(&mut self, glyph: char) -> Result<&mut Self> {
-        self.data.push(glyph);
+        // self.data.push(glyph);
+        self.data.insert(self.pos.col, glyph);
+
         Ok(self)
     }
 
