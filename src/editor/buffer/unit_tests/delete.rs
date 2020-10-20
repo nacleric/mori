@@ -39,7 +39,7 @@ fn delete_glyph__deleting_a_glyph_from_experimental_data_model_removes_the_expec
     let mut sut = Buffer::new();
 
     // When
-    sut.pos.update(6, 0);
+    sut.pos.set(6, 0);
     let res = sut.delete_glyph();
 
     // Then

@@ -52,8 +52,7 @@ fn insert_glyph__adding_multiple_glyphs_yields_model_with_a_sentence() -> Result
     // Given
     let sentence = String::from("green sleeping mask");
     let expected_result = String::from("green sleeping mask");
-    let mut sut = Buffer::new();
-    sut.pos.update(0, 0)?;
+    let sut = Buffer::new();
 
     // When
     let mut res = sut;
@@ -76,7 +75,7 @@ fn insert_glyph__adding_a_glyph_in_a_specific_position_yields_a_glyph_yields_ins
     for glyph in bad_sentence.chars() {
         sut.insert_glyph(glyph)?;
     }
-    sut.pos.update(4, 0)?;
+    sut.pos.set(4, 0)?;
 
     // When
     let res = sut.insert_glyph(glyph);

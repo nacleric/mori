@@ -13,7 +13,7 @@ impl Position {
         Self { col: 0, row: 0 }
     }
 
-    pub fn update(&mut self, col: usize, row: usize) -> Result<&mut Self> {
+    pub fn set(&mut self, col: usize, row: usize) -> Result<&mut Self> {
         self.col = col;
         self.row = row;
         Ok(self)
@@ -41,8 +41,8 @@ pub struct Buffer {
 impl Buffer {
     pub fn new() -> Self {
         Self {
-            data: String::new(),
-            pos: Position::new(),
+            data: String::default(),
+            pos: Position::default(),
         }
     }
 
@@ -57,6 +57,10 @@ impl Buffer {
         self
     }
 
+    pub fn data(&self) -> String {
+        self.data.clone()
+    }
+
     pub fn insert_glyph(&mut self, glyph: char) -> Result<&mut Self> {
         // Note ask Brad about accessors again:
         self.data.insert(self.pos().col, glyph);
@@ -67,8 +71,22 @@ impl Buffer {
         Ok(self)
     }
 
+    pub fn insert_glyphs<I: Iterator<Item = char>>(&mut self, glyphs: I) -> Result<&mut Self> {
+        glyphs
+            .into_iter()
+            .try_for_each(|c| self.insert_glyph(c).map(|_| ()))?;
+        Ok(self)
+    }
+
+    /// `try_for_each` wants `Result<(), E>` from each iteration (wants `Ok(())` or `Err(E)`)
+    ///    but is getting...  
+
     pub fn pos(&self) -> Position {
         self.pos
     }
 
+    pub fn set_data<S: Into<String>>(&mut self, data: S) -> &mut Self {
+        self.data = data.into();
+        self
+    }
 }
