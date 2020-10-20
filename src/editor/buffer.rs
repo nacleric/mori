@@ -58,8 +58,11 @@ impl Buffer {
     }
 
     pub fn insert_glyph(&mut self, glyph: char) -> Result<&mut Self> {
-        // self.data.push(glyph);
-        self.data.insert(self.pos.col, glyph);
+        // Note ask Brad about accessors again:
+        self.data.insert(self.pos().col, glyph);
+        // vs
+        // self.data.insert(self.pos.col, glyph);
+        self.pos.right()?;
 
         Ok(self)
     }
