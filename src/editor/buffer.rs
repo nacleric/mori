@@ -13,6 +13,10 @@ impl Position {
         Self { col: 0, row: 0 }
     }
 
+    pub fn col(&mut self) -> usize {
+        self.col
+    }
+
     pub fn set(&mut self, col: usize, row: usize) -> Result<&mut Self> {
         self.col = col;
         self.row = row;
@@ -26,9 +30,14 @@ impl Position {
         Ok(self)
     }
 
+    // Note: Might need to account for max size of string
     pub fn right(&mut self) -> Result<&mut Self> {
         self.col += 1;
         Ok(self)
+    }
+
+    pub fn row(&mut self) -> usize {
+        self.row
     }
 }
 
@@ -50,10 +59,10 @@ impl Buffer {
         self.data.clone()
     }
 
-    // Note: https://stackoverflow.com/questions/24542115/how-to-index-a-string-in-rust
-    // TODO: Might need to account for glyphs that take up 2+ characters
     pub fn delete_glyph(&mut self) -> &mut Self {
-        self.data.clear();
+        if self.pos().col() != 0 {
+            self.data.drain(self.pos().col()-1..self.pos().col());
+        }
         self
     }
 
@@ -62,24 +71,20 @@ impl Buffer {
     }
 
     pub fn insert_glyph(&mut self, glyph: char) -> Result<&mut Self> {
-        // Note ask Brad about accessors again:
-        self.data.insert(self.pos().col, glyph);
-        // vs
-        // self.data.insert(self.pos.col, glyph);
+        self.data.insert(self.pos().col(), glyph);
         self.pos.right()?;
 
         Ok(self)
     }
 
     pub fn insert_glyphs<I: Iterator<Item = char>>(&mut self, glyphs: I) -> Result<&mut Self> {
+        // `try_for_each` wants `Result<(), E>` from each iteration (wants `Ok(())` or `Err(E)`)
         glyphs
             .into_iter()
             .try_for_each(|c| self.insert_glyph(c).map(|_| ()))?;
         Ok(self)
     }
 
-    /// `try_for_each` wants `Result<(), E>` from each iteration (wants `Ok(())` or `Err(E)`)
-    ///    but is getting...  
 
     pub fn pos(&self) -> Position {
         self.pos

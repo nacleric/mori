@@ -34,12 +34,13 @@ fn delete_glyph__deleting_sole_glyph_at_valid_pos_returns_empty_buffer() -> Resu
 fn delete_glyph__deleting_a_glyph_from_experimental_data_model_removes_the_expected_glyph(
 ) -> Result<()> {
     // Given
-    let sentence = String::from("helloo world");
-    let expected_result = String::from("helloo worlda");
+    let bad_sentence = String::from("greenb sleeping mask");
+    let expected_result = String::from("green sleeping mask");
     let mut sut = Buffer::new();
+    sut.set_data(bad_sentence);
+    sut.pos.set(6, 0)?;
 
     // When
-    sut.pos.set(6, 0);
     let res = sut.delete_glyph();
 
     // Then
