@@ -66,6 +66,12 @@ impl Buffer {
         self
     }
 
+    /// Removes data from the buffer but does not remove the entire buffer
+    pub fn delete_glyphs(&mut self) -> &mut Self {
+        self.data.clear();
+        self
+    }
+
     pub fn data(&self) -> String {
         self.data.clone()
     }
