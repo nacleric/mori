@@ -21,9 +21,8 @@ fn set__update_position_to_invalid_coords_fails() {
     let mut sut = current_position;
 
     // When
-    sut.set(6, 0);
-    let res = sut;
+    let res = sut.set(6, 0);
 
     // Then
-    assert_eq!(res, expected_result);
+    assert_eq!(res.as_deref(), Ok(&expected_result));
 }
