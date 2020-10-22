@@ -44,6 +44,7 @@ impl Position {
 #[derive(Debug, Default, Eq, PartialEq)]
 pub struct Buffer {
     data: String,
+    // Use a reference here? &Position
     pos: Position,
 }
 
@@ -99,5 +100,20 @@ impl Buffer {
     pub fn set_data<S: Into<String>>(&mut self, data: S) -> &mut Self {
         self.data = data.into();
         self
+    }
+}
+
+// TODO: Change the name of this later
+struct Big_Buffer {
+    lines: Vec<Buffer>,
+    pos: Position,
+}
+
+impl Big_Buffer {
+    pub fn new() -> Self {
+        Self {
+            lines: Vec::new(),
+            pos: Position::default(),
+        }
     }
 }
