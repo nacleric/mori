@@ -26,12 +26,11 @@ impl Buffer {
         self
     }
 
-    pub fn insert_glyphs<I: Iterator<Item = char>>(&mut self, glyphs: I) -> Result<&mut Self> {
-        // `try_for_each` wants `Result<(), E>` from each iteration (wants `Ok(())` or `Err(E)`)
-        glyphs
-            .into_iter()
-            .try_for_each(|c| self.insert_glyph(c).map(|_| ()))?;
-        Ok(self)
+    pub fn insert_glyphs<I: Iterator<Item = char>>(&mut self, glyphs: I) -> &mut Self {
+        glyphs.into_iter().for_each(|c| {
+            self.insert_glyph(c);
+        });
+        self
     }
 }
 
@@ -42,36 +41,39 @@ impl GlyphBuffer for Buffer {
         self.data.as_bytes()
     }
 
-    fn delete_glyph(&mut self) -> Result<&mut Self, Self::Error> {
+    fn delete_glyph(&mut self) -> Option<char> {
         unimplemented!()
     }
 
-    fn insert_glyph(&mut self, glyph: char) -> Result<&mut Self, Self::Error> {
+    fn insert_glyph(&mut self, glyph: char) -> &mut Self {
         self.data.insert(self.pos().col(), glyph);
-        self.move_right()?;
-
-        Ok(self)
+        self.move_right().unwrap_or_else(|| {
+            unreachable!(
+                "`move_right()` expected to always succeed immediately following an `insert()`."
+            )
+        });
+        self
     }
 
-    fn move_down(&mut self) -> Result<&mut Self, Self::Error> {
+    fn move_down(&mut self) -> Option<&mut Self> {
         self.pos = Position::new(self.pos.col(), self.pos.row().saturating_add(1));
-        Ok(self)
+        Some(self)
     }
 
-    fn move_left(&mut self) -> Result<&mut Self, Self::Error> {
+    fn move_left(&mut self) -> Option<&mut Self> {
         unimplemented!()
     }
 
-    fn move_right(&mut self) -> Result<&mut Self, Self::Error> {
+    fn move_right(&mut self) -> Option<&mut Self> {
         unimplemented!()
     }
 
-    fn move_up(&mut self) -> Result<&mut Self, Self::Error> {
+    fn move_up(&mut self) -> Option<&mut Self> {
         unimplemented!()
     }
 
     fn pos(&self) -> Position {
-        unimplemented!()
+        self.pos
     }
 
     fn set_pos(&mut self, pos: Position) -> Result<&mut Self, Self::Error> {

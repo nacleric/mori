@@ -3,5 +3,5 @@ mod delete_glyph;
 mod delete_glyphs;
 mod insert_glyph;
 mod insert_glyphs;
-mod set;
+mod set_pos;
 use super::*;
