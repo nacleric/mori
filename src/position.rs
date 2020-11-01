@@ -1,3 +1,8 @@
+pub enum Direction {
+    Forward,
+    Backward
+}
+
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct Position {
     col: usize, // x-coord

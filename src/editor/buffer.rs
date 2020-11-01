@@ -3,7 +3,7 @@ mod unit_tests;
 use crate::{
     error::{Error, Result},
     interfaces::GlyphBuffer,
-    Position,
+    position::{Position, Direction},
 };
 
 #[derive(Debug, Default, Eq, PartialEq)]
@@ -41,17 +41,46 @@ impl GlyphBuffer for Buffer {
         self.data.as_bytes()
     }
 
-    fn delete_glyph(&mut self) -> Option<char> {
-        unimplemented!()
+    // TODO: Add policies to this
+    // Semantically guarantees something gets deleted but if theres nothing to delete than innacurate name
+    fn delete_glyph(&mut self, direction: Direction) -> Option<char> {
+        let current_position = self.pos().col();
+        match direction {
+            Direction::Forward => {
+                if self.pos().col() != self.contents().len() {
+                    self.data.drain(self.pos().col()..self.pos().col() + 1);
+                }
+                // Note: Switch to this when drain() gets removed
+                // self.move_right().unwrap_or_else(|| {
+                //     unreachable!(
+                //         "`move_right()` expected to always suceed immediately following `delete()`."
+                //     )
+                // });
+            }
+            Direction::Backward => {
+                if self.pos().col() != 0 {
+                    self.data.drain(self.pos().col() - 1..self.pos().col());
+                }
+                // Note: Switch to this when drain() gets removed
+                // self.move_left().unwrap_or_else(|| {
+                //     unreachable!(
+                //         "`move_left()` expected to always suceed immediately following `delete()`."
+                //     )
+                // });
+            }
+        };
+        Some('a')
+        // None
     }
 
+    // TODO: Add policies to this
     fn insert_glyph(&mut self, glyph: char) -> &mut Self {
         self.data.insert(self.pos().col(), glyph);
-        self.move_right().unwrap_or_else(|| {
-            unreachable!(
-                "`move_right()` expected to always succeed immediately following an `insert()`."
-            )
-        });
+        // self.move_right().unwrap_or_else(|| {
+        //     unreachable!(
+        //         "`move_right()` expected to always succeed immediately following an `insert()`."
+        //     )
+        // });
         self
     }
 

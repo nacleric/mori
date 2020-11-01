@@ -1,10 +1,13 @@
-use crate::{Position, Result};
+use crate::{
+    position::{Direction, Position},
+    Result,
+};
 
 pub trait GlyphBuffer {
     type Error: std::error::Error;
-    
+
     fn contents(&self) -> &[u8];
-    fn delete_glyph(&mut self) -> Option<char>;
+    fn delete_glyph(&mut self, direction: Direction) -> Option<char>;
     fn insert_glyph(&mut self, glyph: char) -> &mut Self;
     fn move_down(&mut self) -> Option<&mut Self>;
     fn move_left(&mut self) -> Option<&mut Self>;
