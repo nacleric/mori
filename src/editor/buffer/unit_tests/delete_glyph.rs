@@ -5,6 +5,7 @@ fn delete_glyph__deleting_an_empty_buffer_does_nothing() {
     let expected_opt_glyph = None;
     let expected_buffer = Buffer::new();
     let mut sut = Buffer::new();
+
     // When
     let res = sut.delete_glyph(Direction::Backward);
 
@@ -26,7 +27,7 @@ fn delete_glyph__deleting_sole_glyph_behind_cursor_returns_empty_buffer() {
     let res = sut.delete_glyph(Direction::Backward);
 
     // Then
-    // assert_eq!(res, expected_opt_glyph);
+    assert_eq!(res, expected_opt_glyph);
     assert_eq!(sut, expected_buffer);
 }
 

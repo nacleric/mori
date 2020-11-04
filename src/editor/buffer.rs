@@ -69,44 +69,66 @@ impl GlyphBuffer for Buffer {
                 // });
             }
         };
-        Some('a')
-        // None
+        // Some('a')
+        None
     }
 
     // TODO: Add policies to this
     fn insert_glyph(&mut self, glyph: char) -> &mut Self {
         self.data.insert(self.pos().col(), glyph);
-        // self.move_right().unwrap_or_else(|| {
-        //     unreachable!(
-        //         "`move_right()` expected to always succeed immediately following an `insert()`."
-        //     )
-        // });
+        self.move_right().unwrap_or_else(|| {
+            unreachable!(
+                "`move_right()` expected to always succeed immediately following an `insert()`."
+            )
+        });
         self
     }
 
     fn move_down(&mut self) -> Option<&mut Self> {
-        self.pos = Position::new(self.pos.col(), self.pos.row().saturating_add(1));
+        self.pos = Position::new(self.pos().col(), self.pos().row().saturating_add(1));
         Some(self)
     }
 
     fn move_left(&mut self) -> Option<&mut Self> {
-        unimplemented!()
+        // TODO: add saturating_sub
+        self.pos = Position::new(self.pos().col() - 1, self.pos().row());
+        Some(self)
     }
 
     fn move_right(&mut self) -> Option<&mut Self> {
-        unimplemented!()
+        // TODO: add saturating_add
+        self.pos = Position::new(self.pos().col() + 1, self.pos().row());
+        Some(self)
     }
 
     fn move_up(&mut self) -> Option<&mut Self> {
-        unimplemented!()
+        self.pos = Position::new(self.pos().col(), self.pos().row().saturating_sub(1));
+        Some(self)
     }
 
     fn pos(&self) -> Position {
         self.pos
     }
 
+    // TODO: Currently only worries about a single line, no concept of verticality yet
     fn set_pos(&mut self, pos: Position) -> Result<&mut Self, Self::Error> {
-        unimplemented!()
+        let content_length= self.contents().len();
+        
+        // Note: Ask Brad about this *runtime values cannot be referenced in patterns*
+        // match pos.col() {
+        //     0..=content_length => { 
+        //         self.pos = pos;
+        //         Ok(self)
+        //     }
+        //     _ => Err(Error::InvalidPosition(pos))
+        // }
+
+        if pos.col() > 0 && pos.col() < content_length {
+            self.pos = pos;
+            Ok(self)
+        } else {
+            Err(Error::InvalidPosition(pos))
+        }
     }
 }
 
