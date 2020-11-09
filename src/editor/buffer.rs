@@ -1,10 +1,12 @@
+pub mod direction;
 #[cfg(test)]
 mod unit_tests;
 use crate::{
     error::{Error, Result},
     interfaces::GlyphBuffer,
-    position::{Position, Direction},
+    position::Position,
 };
+use direction::Direction;
 
 #[derive(Debug, Default, Eq, PartialEq)]
 pub struct Buffer {
@@ -42,35 +44,41 @@ impl GlyphBuffer for Buffer {
     }
 
     // TODO: Add policies to this
+    // Note: Move
     // Semantically guarantees something gets deleted but if theres nothing to delete than innacurate name
     fn delete_glyph(&mut self, direction: Direction) -> Option<char> {
-        let current_position = self.pos().col();
-        match direction {
+        //  hello
+        //  12345
+        let cursor_position= self.pos().col();
+        let glyph = match direction {
             Direction::Forward => {
-                if self.pos().col() != self.contents().len() {
-                    self.data.drain(self.pos().col()..self.pos().col() + 1);
-                }
-                // Note: Switch to this when drain() gets removed
-                // self.move_right().unwrap_or_else(|| {
-                //     unreachable!(
-                //         "`move_right()` expected to always suceed immediately following `delete()`."
-                //     )
-                // });
-            }
-            Direction::Backward => {
-                if self.pos().col() != 0 {
-                    self.data.drain(self.pos().col() - 1..self.pos().col());
-                }
-                // Note: Switch to this when drain() gets removed
+                let mut glyphs = std::str::from_utf8(self.contents()).unwrap().to_owned();
+                let removed_glyph = glyphs.chars().nth(cursor_position).unwrap();
+                glyphs.remove(cursor_position);
+                // Note: Only move_left() if at the end of line (will probably be in a policy function)
                 // self.move_left().unwrap_or_else(|| {
                 //     unreachable!(
                 //         "`move_left()` expected to always suceed immediately following `delete()`."
                 //     )
                 // });
+
+                // This assumes ascii won't work for character glyphs change later
+                removed_glyph
+            }
+            Direction::Backward => {
+                let mut glyphs = std::str::from_utf8(self.contents()).unwrap().to_owned();
+                let removed_glyph = glyphs.chars().nth(cursor_position - 1).unwrap();
+                glyphs.remove(cursor_position);
+                // Note: If at beginning of line *don't* move left (will probably be in a policy function)
+                // self.move_left().unwrap_or_else(|| {
+                //     unreachable!(
+                //         "`move_left()` expected to always suceed immediately following `delete()`."
+                //     )
+                // });
+                removed_glyph
             }
         };
-        // Some('a')
-        None
+        Some(glyph)
     }
 
     // TODO: Add policies to this
@@ -110,25 +118,25 @@ impl GlyphBuffer for Buffer {
         self.pos
     }
 
+    fn set_contents(&mut self, content: &[u8]) -> Result<&mut Self, Self::Error> {
+        let data = std::str::from_utf8(content).expect("utf8 error").to_owned();
+        self.data = data;
+        Ok(self)
+    }
+
     // TODO: Currently only worries about a single line, no concept of verticality yet
     fn set_pos(&mut self, pos: Position) -> Result<&mut Self, Self::Error> {
-        let content_length= self.contents().len();
-        
-        // Note: Ask Brad about this *runtime values cannot be referenced in patterns*
-        // match pos.col() {
-        //     0..=content_length => { 
-        //         self.pos = pos;
-        //         Ok(self)
-        //     }
-        //     _ => Err(Error::InvalidPosition(pos))
-        // }
+        let content_length = self.contents().len();
 
-        if pos.col() > 0 && pos.col() < content_length {
-            self.pos = pos;
-            Ok(self)
-        } else {
-            Err(Error::InvalidPosition(pos))
-        }
+        let pos = match pos.col() {
+            _col if _col < content_length => {
+                self.pos = pos;
+                Ok(self)
+            }
+            _ => Err(Error::InvalidPosition(pos)),
+        };
+
+        pos
     }
 }
 
