@@ -52,29 +52,32 @@ impl GlyphBuffer for Buffer {
         let cursor_position= self.pos().col();
         let glyph = match direction {
             Direction::Forward => {
-                let mut glyphs = std::str::from_utf8(self.contents()).unwrap().to_owned();
+                let mut glyphs = std::str::from_utf8(self.contents()).expect("Returns a &str").to_owned();
                 let removed_glyph = glyphs.chars().nth(cursor_position).unwrap();
                 glyphs.remove(cursor_position);
-                // Note: Only move_left() if at the end of line (will probably be in a policy function)
-                // self.move_left().unwrap_or_else(|| {
-                //     unreachable!(
-                //         "`move_left()` expected to always suceed immediately following `delete()`."
-                //     )
-                // });
 
-                // This assumes ascii won't work for character glyphs change later
+                // Note: Only move_left() if at the end of line (will probably be in a policy function)
+                self.move_left().unwrap_or_else(|| {
+                    unreachable!(
+                        "`move_left()` expected to always suceed immediately following `delete()`."
+                    )
+                });
+
                 removed_glyph
             }
             Direction::Backward => {
-                let mut glyphs = std::str::from_utf8(self.contents()).unwrap().to_owned();
+                let mut glyphs = std::str::from_utf8(self.contents()).expect("Returns a &str").to_owned();
                 let removed_glyph = glyphs.chars().nth(cursor_position - 1).unwrap();
-                glyphs.remove(cursor_position);
-                // Note: If at beginning of line *don't* move left (will probably be in a policy function)
-                // self.move_left().unwrap_or_else(|| {
-                //     unreachable!(
-                //         "`move_left()` expected to always suceed immediately following `delete()`."
-                //     )
-                // });
+                glyphs.remove(cursor_position - 1);
+
+                if cursor_position != 0 {
+                    // Note: If at beginning of line *don't* move left (will probably be in a policy function)
+                    self.move_left().unwrap_or_else(|| {
+                        unreachable!(
+                            "`move_left()` expected to always suceed immediately following `delete()`."
+                        )
+                    });
+                }
                 removed_glyph
             }
         };
