@@ -44,7 +44,7 @@ impl GlyphBuffer for Buffer {
     }
 
     // TODO: Add policies to this
-    // Note: Move
+    // Note: (backward) invalid position because their is no space in front of the index to be able to delete
     // Semantically guarantees something gets deleted but if theres nothing to delete than innacurate name
     fn delete_glyph(&mut self, direction: Direction) -> Option<char> {
         //  hello
@@ -53,7 +53,7 @@ impl GlyphBuffer for Buffer {
         let glyph = match direction {
             Direction::Forward => {
                 let mut glyphs = std::str::from_utf8(self.contents()).expect("Returns a &str").to_owned();
-                let removed_glyph = glyphs.chars().nth(cursor_position).unwrap();
+                let removed_glyph = glyphs.chars().nth(cursor_position)?;
                 glyphs.remove(cursor_position);
 
                 // Note: Only move_left() if at the end of line (will probably be in a policy function)
@@ -67,8 +67,8 @@ impl GlyphBuffer for Buffer {
             }
             Direction::Backward => {
                 let mut glyphs = std::str::from_utf8(self.contents()).expect("Returns a &str").to_owned();
-                let removed_glyph = glyphs.chars().nth(cursor_position - 1).unwrap();
-                glyphs.remove(cursor_position - 1);
+                let removed_glyph = glyphs.chars().nth(cursor_position.saturating_sub(1))?;
+                glyphs.remove(cursor_position.saturating_sub(1));
 
                 if cursor_position != 0 {
                     // Note: If at beginning of line *don't* move left (will probably be in a policy function)

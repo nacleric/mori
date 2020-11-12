@@ -29,14 +29,17 @@ fn delete_glyph__forward_delete_an_empty_buffer_does_nothing() {
     assert_eq!(sut, expected_buffer);
 }
 
+// Note: invalid position error because their is no space in front of the index to be able to delete. Maybe pad the buffer?
 #[test]
-fn delete_glyph__backward_delete_sole_glyph_returns_empty_buffer() {
+fn delete_glyph__backward_delete_sole_glyph_returns_empty_buffer() -> Result<()> {
     // Given
     let glyph = 'a';
     let expected_opt_glyph = Some(glyph);
     let expected_buffer = Buffer::new();
+    let glyph_pos = 1;
     let mut sut = Buffer::new();
     sut.insert_glyph(glyph);
+    sut.set_pos(Position::new(glyph_pos, 0))?;
 
     // When
     let res = sut.delete_glyph(Direction::Backward);
@@ -44,9 +47,11 @@ fn delete_glyph__backward_delete_sole_glyph_returns_empty_buffer() {
     // Then
     assert_eq!(res, expected_opt_glyph);
     assert_eq!(sut, expected_buffer);
+    Ok(())
 }
 
-fn delete_glyph__forward_delete_sole_glyph_returns_empty_buffer() {
+#[test]
+fn delete_glyph__forward_delete_sole_glyph_returns_empty_buffer() -> Result<()> {
     // Given
     let glyph = 'a';
     let expected_opt_glyph = Some(glyph);
@@ -60,6 +65,7 @@ fn delete_glyph__forward_delete_sole_glyph_returns_empty_buffer() {
     // Then
     assert_eq!(res, expected_opt_glyph);
     assert_eq!(sut, expected_buffer);
+    Ok(())
 }
 
 // Doesn't work yet
