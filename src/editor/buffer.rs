@@ -44,37 +44,50 @@ impl GlyphBuffer for Buffer {
     }
 
     // TODO: Add policies to this
-    // Note: (backward) invalid position because their is no space in front of the index to be able to delete
+    // Note: (backward) invalid position because their is no space in front of the index to be able to delete, might have to pad buffer
     // Semantically guarantees something gets deleted but if theres nothing to delete than innacurate name
     fn delete_glyph(&mut self, direction: Direction) -> Option<char> {
         //  hello
         //  12345
-        let cursor_position= self.pos().col();
+        let cursor_position = self.pos().col();
         let glyph = match direction {
             Direction::Forward => {
-                let mut glyphs = std::str::from_utf8(self.contents()).expect("Returns a &str").to_owned();
+                let mut glyphs = std::str::from_utf8(self.contents())
+                    .expect("Returns a &str")
+                    .to_owned();
                 let removed_glyph = glyphs.chars().nth(cursor_position)?;
                 glyphs.remove(cursor_position);
 
+                self.set_contents(glyphs).unwrap_or_else(|_| {
+                    unreachable!(
+                        "`set_contents()` is always expected to update the buffer after glyph is deleted"
+                    )
+                });
                 // Note: Only move_left() if at the end of line (will probably be in a policy function)
                 self.move_left().unwrap_or_else(|| {
                     unreachable!(
                         "`move_left()` expected to always suceed immediately following `delete()`."
                     )
                 });
-
                 removed_glyph
             }
             Direction::Backward => {
-                let mut glyphs = std::str::from_utf8(self.contents()).expect("Returns a &str").to_owned();
+                let mut glyphs = std::str::from_utf8(self.contents())
+                    .expect("Returns a &str")
+                    .to_owned();
                 let removed_glyph = glyphs.chars().nth(cursor_position.saturating_sub(1))?;
                 glyphs.remove(cursor_position.saturating_sub(1));
 
+                self.set_contents(glyphs).unwrap_or_else(|_| {
+                    unreachable!(
+                        "`set_contents()` is always expected to update the buffer after glyph is deleted"
+                    )
+                });
                 if cursor_position != 0 {
                     // Note: If at beginning of line *don't* move left (will probably be in a policy function)
                     self.move_left().unwrap_or_else(|| {
                         unreachable!(
-                            "`move_left()` expected to always suceed immediately following `delete()`."
+                            "`move_left()` expected to always succeed immediately following `delete()`."
                         )
                     });
                 }
@@ -101,14 +114,12 @@ impl GlyphBuffer for Buffer {
     }
 
     fn move_left(&mut self) -> Option<&mut Self> {
-        // TODO: add saturating_sub
-        self.pos = Position::new(self.pos().col() - 1, self.pos().row());
+        self.pos = Position::new(self.pos().col().saturating_sub(1), self.pos().row());
         Some(self)
     }
 
     fn move_right(&mut self) -> Option<&mut Self> {
-        // TODO: add saturating_add
-        self.pos = Position::new(self.pos().col() + 1, self.pos().row());
+        self.pos = Position::new(self.pos().col().saturating_add(1), self.pos().row());
         Some(self)
     }
 
@@ -121,8 +132,7 @@ impl GlyphBuffer for Buffer {
         self.pos
     }
 
-    fn set_contents(&mut self, content: &[u8]) -> Result<&mut Self, Self::Error> {
-        let data = std::str::from_utf8(content).expect("utf8 error").to_owned();
+    fn set_contents(&mut self, data: String) -> Result<&mut Self, Self::Error> {
         self.data = data;
         Ok(self)
     }
@@ -138,7 +148,6 @@ impl GlyphBuffer for Buffer {
             }
             _ => Err(Error::InvalidPosition(pos)),
         };
-
         pos
     }
 }

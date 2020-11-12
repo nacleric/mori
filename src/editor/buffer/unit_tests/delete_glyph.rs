@@ -50,6 +50,7 @@ fn delete_glyph__backward_delete_sole_glyph_returns_empty_buffer() -> Result<()>
     Ok(())
 }
 
+// Note: Deletion isn't happening
 #[test]
 fn delete_glyph__forward_delete_sole_glyph_returns_empty_buffer() -> Result<()> {
     // Given
@@ -58,6 +59,7 @@ fn delete_glyph__forward_delete_sole_glyph_returns_empty_buffer() -> Result<()> 
     let expected_buffer = Buffer::new();
     let mut sut = Buffer::new();
     sut.insert_glyph(glyph);
+    sut.set_pos(Position::new(0, 0))?;
 
     // When
     let res = sut.delete_glyph(Direction::Forward);
