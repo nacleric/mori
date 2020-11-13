@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 mod cli_args;
 mod editor;
 mod error;

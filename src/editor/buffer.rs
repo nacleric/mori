@@ -141,14 +141,13 @@ impl GlyphBuffer for Buffer {
     fn set_pos(&mut self, pos: Position) -> Result<&mut Self, Self::Error> {
         let content_length = self.contents().len();
 
-        let pos = match pos.col() {
-            _col if _col < content_length => {
+        match pos.col() {
+            col if col <= content_length => {
                 self.pos = pos;
                 Ok(self)
             }
             _ => Err(Error::InvalidPosition(pos)),
-        };
-        pos
+        }
     }
 }
 
