@@ -1,7 +1,7 @@
 use crate::{
     position::Position,
     Result,
-    editor::buffer::direction::Direction,
+    buffer::direction::Direction,
 };
 
 pub trait GlyphBuffer {

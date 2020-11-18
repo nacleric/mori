@@ -1,9 +1,10 @@
 #![allow(dead_code)]
 mod cli_args;
-mod editor;
 mod error;
 mod position;
 pub mod interfaces;
+pub mod buffer;
+
 use cli_args::CliArgs;
 pub use {error::{Error, Result}, position::Position};
 use structopt::StructOpt;
