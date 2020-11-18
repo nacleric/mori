@@ -7,6 +7,8 @@ use crate::{
     position::Position,
 };
 use direction::Direction;
+use crate::interfaces::View;
+use std::io::Write;
 
 #[derive(Debug, Default, Eq, PartialEq)]
 pub struct Buffer {
@@ -151,17 +153,9 @@ impl GlyphBuffer for Buffer {
     }
 }
 
-// TODO: Change the name of this later
-struct BigBuffer {
-    lines: Vec<Buffer>,
-    pos: Position,
-}
-
-impl BigBuffer {
-    pub fn new() -> Self {
-        Self {
-            lines: Vec::new(),
-            pos: Position::default(),
-        }
+impl View for Buffer {
+    fn show<W: Write>(&self, writer: &mut W) -> Result<&Self> {
+        writer.write_all(self.contents())?;
+        Ok(self)
     }
 }
