@@ -16,7 +16,6 @@ fn empty_buffer_displays_nothing() {
     assert_eq!(stdout_mock, expected_res);
 }
 
-// Ask Brad: public vs private api. Would opening a file and loading the contents still apply to testing public api, technically not mimicing what a user would actually do.
 #[test]
 fn show__buffer_displays_a_single_glyph() {
     // Given
@@ -33,6 +32,19 @@ fn show__buffer_displays_a_single_glyph() {
     assert_eq!(stdout_mock, expected_res);
 }
 
-fn show__buffer_inserts_a_glyph_and_displays_buffer(){
-    unimplemented!()
+fn show__buffer_displays_multiple_glyphs(){
+    // Given
+    let sentence = String::from("hello world");
+    let expected_res = [sentence.into_bytes()];
+    let buf = Buffer::new();
+    buf.insert_glyphs(sentence.chars());
+
+    let mut stdout_mock = Vec::<Vec<u8>>::new();
+
+    // When
+    let res = buf.show(&mut stdout_mock);
+
+    //Then
+    assert!(res.is_ok());
+    assert_eq!(stdout_mock, expected_res);
 }

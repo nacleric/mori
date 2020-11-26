@@ -153,7 +153,6 @@ impl GlyphBuffer for Buffer {
     }
 }
 
-// Ask brad about generics and traits
 impl View for Buffer {
     fn show<W: Write>(&self, writer: &mut W) -> Result<&Self> {
         writer.write_all(self.contents())?;
