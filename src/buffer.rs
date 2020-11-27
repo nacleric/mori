@@ -154,6 +154,7 @@ impl GlyphBuffer for Buffer {
 }
 
 impl View for Buffer {
+    // Note: Constrains type to types that implement the write Trait
     fn show<W: Write>(&self, writer: &mut W) -> Result<&Self> {
         writer.write_all(self.contents())?;
         Ok(self)
