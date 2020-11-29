@@ -12,4 +12,6 @@ use structopt::StructOpt;
 fn main() {
     let args = CliArgs::from_args();
     dbg!(args);
+    // TODO: Create prototype view and event loop. Load args into buffer
+    // loop {}
 }

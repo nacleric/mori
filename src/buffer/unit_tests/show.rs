@@ -38,11 +38,10 @@ fn show__buffer_displays_multiple_glyphs(){
     let sentence = String::from("hello world");
     let mut buf = Buffer::new();
     buf.insert_glyphs(sentence.chars());
-    let expected_res = sentence.into_bytes();
+    let expected_res = sentence.into_bytes(); // self -> vec<u8> into_bytes() consumes sentence
 
     let mut stdout_mock = Vec::<u8>::new();
 
-    let buf = Buffer::new();
     // When
     let res = buf.show(&mut stdout_mock);
 

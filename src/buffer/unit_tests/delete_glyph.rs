@@ -49,7 +49,6 @@ fn delete_glyph__backward_delete_sole_glyph_returns_empty_buffer() {
     assert_eq!(sut, expected_buffer);
 }
 
-// Note: Deletion isn't happening
 #[test]
 fn delete_glyph__forward_delete_sole_glyph_returns_empty_buffer() -> Result<()> {
     // Given
