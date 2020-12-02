@@ -45,12 +45,8 @@ impl GlyphBuffer for Buffer {
         self.data.as_bytes()
     }
 
-    // TODO: Add policies to this
-    // Note: (backward) invalid position because their is no space in front of the index to be able to delete, might have to pad buffer
     // Semantically guarantees something gets deleted but if theres nothing to delete than innacurate name
     fn delete_glyph(&mut self, direction: Direction) -> Option<char> {
-        //  hello
-        //  12345
         let cursor_position = self.pos().col();
         let glyph = match direction {
             Direction::Forward => {
