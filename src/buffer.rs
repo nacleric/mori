@@ -1,14 +1,15 @@
 pub mod direction;
 #[cfg(test)]
 mod unit_tests;
+use crate::interfaces::View;
 use crate::{
     error::{Error, Result},
     interfaces::GlyphBuffer,
     position::Position,
 };
 use direction::Direction;
-use crate::interfaces::View;
 use std::io::Write;
+use unicode_segmentation::UnicodeSegmentation;
 
 #[derive(Debug, Default, Eq, PartialEq)]
 pub struct Buffer {
@@ -95,9 +96,9 @@ impl GlyphBuffer for Buffer {
         Some(glyph)
     }
 
-    // TODO: Add policies to this
     fn insert_glyph(&mut self, glyph: char) -> &mut Self {
-        self.data.insert(self.pos().col(), glyph);
+        // TODO: From Rust traceback
+        self.data.insert(self.index(), glyph);
         self.move_right().unwrap_or_else(|| {
             unreachable!(
                 "`move_right()` expected to always succeed immediately following an `insert()`."
@@ -128,6 +129,19 @@ impl GlyphBuffer for Buffer {
 
     fn pos(&self) -> Position {
         self.pos
+    }
+
+    // TODO: WIP needs to account for rows and columns. Vec of String
+    fn index(&self) -> usize {
+        match self.pos().col() {
+            0 => 0,
+            pos => self
+                .data[self.pos().row()]
+                .grapheme_indices(true)
+                .nth(self.pos().col() - 1)
+                .expect("Invalid position") // usize is index &str utf8 representation of the char
+                .0,
+        }
     }
 
     fn set_contents(&mut self, data: String) -> Result<&mut Self, Self::Error> {

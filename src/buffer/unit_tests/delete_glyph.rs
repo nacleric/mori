@@ -50,9 +50,47 @@ fn delete_glyph__backward_delete_sole_glyph_returns_empty_buffer() {
 }
 
 #[test]
+fn delete_glyph__backward_delete_sole_weird_glyph_returns_empty_buffer() {
+    // Given
+    let glyph = '你';
+    let expected_opt_glyph = Some(glyph);
+    let expected_buffer = Buffer::new();
+    let mut sut = Buffer::new();
+    sut.insert_glyph(glyph);
+    let cursor_pos = 1;
+    sut.set_pos(Position::new(cursor_pos, 0)).unwrap();
+
+    // When
+    let res = sut.delete_glyph(Direction::Backward);
+
+    // Then
+    assert_eq!(res, expected_opt_glyph);
+    assert_eq!(sut, expected_buffer);
+}
+
+#[test]
 fn delete_glyph__forward_delete_sole_glyph_returns_empty_buffer() -> Result<()> {
     // Given
     let glyph = 'a';
+    let expected_opt_glyph = Some(glyph);
+    let expected_buffer = Buffer::new();
+    let mut sut = Buffer::new();
+    sut.insert_glyph(glyph);
+    sut.set_pos(Position::new(0, 0))?;
+
+    // When
+    let res = sut.delete_glyph(Direction::Forward);
+
+    // Then
+    assert_eq!(res, expected_opt_glyph);
+    assert_eq!(sut, expected_buffer);
+    Ok(())
+}
+
+#[test]
+fn delete_glyph__forward_delete_sole_weird_glyph_returns_empty_buffer() -> Result<()> {
+    // Given
+    let glyph = '你';
     let expected_opt_glyph = Some(glyph);
     let expected_buffer = Buffer::new();
     let mut sut = Buffer::new();

@@ -78,6 +78,7 @@ dependencies = [
  "structopt",
  "termion",
  "thiserror",
+ "unicode-segmentation",
 ]
 
 [[package]]

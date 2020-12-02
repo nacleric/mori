@@ -17,6 +17,22 @@ fn insert_glyph__adding_a_glyph_to_an_empty_data_model_yields_a_model_containing
 }
 
 #[test]
+fn insert_glyph__adding_a_weird_glyph_to_an_empty_data_model_yields_a_model_containing_only_the_glyph(
+) -> Result<()> {
+    // Given
+    let glyph = '你';
+    let expected_result = String::from(glyph);
+    let mut sut = Buffer::new();
+
+    // When
+    let res = sut.insert_glyph(glyph);
+
+    // Then
+    assert_eq!(res.contents(), expected_result.as_bytes());
+    Ok(())
+}
+
+#[test]
 fn insert_glyph__adding_an_escape_character_glyph_to_an_empty_data_model_yields_escape_glyph(
 ) -> Result<()> {
     // Given

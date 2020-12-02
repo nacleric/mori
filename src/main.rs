@@ -19,10 +19,11 @@ use crate::{
 
 // TODO: Read filepath and insert contents into buffer
 // Step 2: decouple it in a way that makes sense. Maybe put it into a folder called views
-fn main() {
+fn main() -> Result<()> {
     let filepath = CliArgs::from_args();
-    let data = std::fs::read_to_string(filepath);
+    let data = std::fs::read_to_string(filepath.path)?;
     let mut buf = Buffer::new();
+    buf.insert_glyphs(data.chars());
 
     loop {
         let mut input = String::new();
