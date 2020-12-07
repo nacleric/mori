@@ -25,6 +25,8 @@ fn main() -> Result<()> {
     let mut buf = Buffer::new();
     buf.insert_glyphs(data.chars());
 
+    // initialize_buffer(data)
+
     loop {
         let mut input = String::new();
 

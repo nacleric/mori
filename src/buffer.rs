@@ -163,6 +163,37 @@ impl GlyphBuffer for Buffer {
     }
 }
 
+// Maybe separate into it's own file?
+// Will RowBuffer handle movement logic?
+// Maybe make another trait/interface that only handles movement
+// RowBuffer can handle up, down. Buffer handles left, right?
+#[derive(Debug, Default, Eq, PartialEq)]
+pub struct RowBuffer {
+    data: Vec<Buffer>,
+}
+
+impl RowBuffer {
+    // (Maybe skip for now) Remember to retain indentations. Might have to auto insert tabs or X-amount of spaces
+    // Decouple policy
+    pub fn new() -> Self {
+        Self {
+            data: vec![Buffer::new()],
+        }
+    }
+
+    pub fn add_row() {
+        // Enter Key-event: Add a new empty buffer when pressing enter
+        // (Policy) If enter is pressed mid-string, data to the right of cursor is put into new line
+        unimplemented!()
+    }
+
+    pub fn delete_row() {
+        // Backspace Key-event: Remove buffer if index[0] get's deleted
+        // (Policy) If elements still exist in buffer, move data to the row above it
+        unimplemented!()
+    }
+}
+
 impl View for Buffer {
     // Note: Constrains type to types that implement the write Trait
     fn show<W: Write>(&self, writer: &mut W) -> Result<&Self> {
