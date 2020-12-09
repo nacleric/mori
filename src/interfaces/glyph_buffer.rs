@@ -9,7 +9,7 @@ pub trait GlyphBuffer {
 
     fn contents(&self) -> &[u8];
     fn delete_glyph(&mut self, direction: Direction) -> Option<char>;
-    fn insert_glyph(&mut self, glyph: char) -> &mut Self;
+    fn insert_glyph(&mut self, glyph: char, pos: Position) -> Position;
     fn move_down(&mut self) -> Option<&mut Self>;
     fn move_left(&mut self) -> Option<&mut Self>;
     fn move_right(&mut self) -> Option<&mut Self>;

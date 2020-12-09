@@ -1,3 +1,4 @@
+// Default is also a constructor
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct Position {
     col: usize, // x-coord
@@ -5,6 +6,7 @@ pub struct Position {
 }
 
 impl Position {
+    // type_constructor
     pub fn new(col: usize, row: usize) -> Self {
         Self { col, row }
     }
@@ -13,7 +15,7 @@ impl Position {
         self.col
     }
 
-    pub fn cr_coords(&self) -> (usize, usize) {
+    pub fn as_tuple(&self) -> (usize, usize) {
         (self.col(), self.row())
     }
 
@@ -21,3 +23,10 @@ impl Position {
         self.row
     }
 }
+
+// How default is derived
+// impl Default for Position {
+//     fn default() -> Self {
+//         Self { usize::default(), usize::default() };
+//     }
+// }

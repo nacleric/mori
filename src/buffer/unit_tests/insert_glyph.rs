@@ -1,18 +1,23 @@
 use super::*;
 
+// TODO: this
 #[test]
 fn insert_glyph__adding_a_glyph_to_an_empty_data_model_yields_a_model_containing_only_the_glyph(
 ) -> Result<()> {
     // Given
     let glyph = 'a';
-    let expected_result = String::from(glyph);
+    // let expected_result = vec![glyph.to_string()];
+    let expected_result = Buffer::from(vec![glyph.to_string()]);
+    let pos = Position::default();
+    let expected_pos = Position::new(1, 0);
     let mut sut = Buffer::new();
 
     // When
-    let res = sut.insert_glyph(glyph);
+    let res = sut.insert_glyph(glyph, pos); // maybe like this
 
     // Then
-    assert_eq!(res.contents(), expected_result.as_bytes());
+    assert_eq!(res, expected_pos);
+    assert_eq!(sut.contents(), expected_result.as_bytes());
     Ok(())
 }
 

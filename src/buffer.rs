@@ -13,15 +13,13 @@ use unicode_segmentation::UnicodeSegmentation;
 
 #[derive(Debug, Default, Eq, PartialEq)]
 pub struct Buffer {
-    data: String,
-    pos: Position,
+    rows: Vec<String>,
 }
 
 impl Buffer {
     pub fn new() -> Self {
         Self {
-            data: String::default(),
-            pos: Position::default(),
+            rows: Vec::default(),
         }
     }
 
@@ -36,6 +34,18 @@ impl Buffer {
             self.insert_glyph(c);
         });
         self
+    }
+
+    pub fn add_row() {
+        // Enter Key-event: Add a new empty buffer when pressing enter
+        // (Policy) If enter is pressed mid-string, data to the right of cursor is put into new line
+        unimplemented!()
+    }
+
+    pub fn delete_row() {
+        // Backspace Key-event: Remove buffer if index[0] get's deleted
+        // (Policy) If elements still exist in buffer, move data to the row above it
+        unimplemented!()
     }
 }
 
@@ -96,7 +106,7 @@ impl GlyphBuffer for Buffer {
         Some(glyph)
     }
 
-    fn insert_glyph(&mut self, glyph: char) -> &mut Self {
+    fn insert_glyph(&mut self, glyph: char, pos: Position) -> Position {
         // TODO: From Rust traceback
         self.data.insert(self.index(), glyph);
         self.move_right().unwrap_or_else(|| {
@@ -104,7 +114,7 @@ impl GlyphBuffer for Buffer {
                 "`move_right()` expected to always succeed immediately following an `insert()`."
             )
         });
-        self
+        pos
     }
 
     fn move_down(&mut self) -> Option<&mut Self> {
@@ -160,37 +170,6 @@ impl GlyphBuffer for Buffer {
             }
             _ => Err(Error::InvalidPosition(pos)),
         }
-    }
-}
-
-// Maybe separate into it's own file?
-// Will RowBuffer handle movement logic?
-// Scenario 1: Maybe make another trait/interface that only handles movement. RowBuffer can handle up, down. Buffer handles left, right?
-// Scenario 2: Position becomes completely separate from RowBuffer and Buffer
-#[derive(Debug, Default, Eq, PartialEq)]
-pub struct RowBuffer {
-    data: Vec<Buffer>,
-}
-
-// (Maybe skip for now) Remember to retain indentations. Might have to auto insert tabs or X-amount of spaces
-// Decouple policy
-impl RowBuffer {
-    pub fn new() -> Self {
-        Self {
-            data: vec![Buffer::new()],
-        }
-    }
-
-    pub fn add_row() {
-        // Enter Key-event: Add a new empty buffer when pressing enter
-        // (Policy) If enter is pressed mid-string, data to the right of cursor is put into new line
-        unimplemented!()
-    }
-
-    pub fn delete_row() {
-        // Backspace Key-event: Remove buffer if index[0] get's deleted
-        // (Policy) If elements still exist in buffer, move data to the row above it
-        unimplemented!()
     }
 }
 
