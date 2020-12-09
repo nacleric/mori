@@ -136,7 +136,7 @@ impl GlyphBuffer for Buffer {
         match self.pos().col() {
             0 => 0,
             pos => self
-                .data[self.pos().row()]
+                .data[self.pos().row()] // .data is for Row Buffer? Assumes Vector
                 .grapheme_indices(true)
                 .nth(self.pos().col() - 1)
                 .expect("Invalid position") // usize is index &str utf8 representation of the char
@@ -165,16 +165,16 @@ impl GlyphBuffer for Buffer {
 
 // Maybe separate into it's own file?
 // Will RowBuffer handle movement logic?
-// Maybe make another trait/interface that only handles movement
-// RowBuffer can handle up, down. Buffer handles left, right?
+// Scenario 1: Maybe make another trait/interface that only handles movement. RowBuffer can handle up, down. Buffer handles left, right?
+// Scenario 2: Position becomes completely separate from RowBuffer and Buffer
 #[derive(Debug, Default, Eq, PartialEq)]
 pub struct RowBuffer {
     data: Vec<Buffer>,
 }
 
+// (Maybe skip for now) Remember to retain indentations. Might have to auto insert tabs or X-amount of spaces
+// Decouple policy
 impl RowBuffer {
-    // (Maybe skip for now) Remember to retain indentations. Might have to auto insert tabs or X-amount of spaces
-    // Decouple policy
     pub fn new() -> Self {
         Self {
             data: vec![Buffer::new()],

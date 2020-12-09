@@ -22,7 +22,15 @@ fn add_row__pushes_a_new_empty_buffer_into_rowbuffer_yields_two_empty_buffers() 
 }
 
 #[test]
-fn delete_row() {
+fn delete_row__pops_off_buffer_yields_empty_buffer() {
+    // Given
+    // When
+    // Then
+    unimplemented!();
+}
+
+#[test]
+fn delete_row__pops_off_populated_buffer_yields_populated_buffer() { // Naming sounds weird
     // Given
     // When
     // Then
