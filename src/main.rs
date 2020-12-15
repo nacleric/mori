@@ -17,7 +17,7 @@ use crate::{
     interfaces::*,
 };
 
-// TODO: Read filepath and insert contents into buffer
+// TODO: Read filepath and insert row_content into buffer
 // Step 2: decouple it in a way that makes sense. Maybe put it into a folder called views
 fn main() -> Result<()> {
     let filepath = CliArgs::from_args();

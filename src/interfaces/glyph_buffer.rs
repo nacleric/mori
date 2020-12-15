@@ -7,15 +7,14 @@ use crate::{
 pub trait GlyphBuffer {
     type Error: std::error::Error;
 
-    fn contents(&self) -> &[u8];
-    fn delete_glyph(&mut self, direction: Direction) -> Option<char>;
+    fn content(&self, pos: Position) -> Vec<String>;
+    fn delete_glyph(&mut self, direction: Direction, pos: Position) -> Option<char>;
     fn insert_glyph(&mut self, glyph: char, pos: Position) -> Position;
     fn move_down(&mut self) -> Option<&mut Self>;
     fn move_left(&mut self) -> Option<&mut Self>;
-    fn move_right(&mut self) -> Option<&mut Self>;
+    fn move_right(&mut self, pos: Position) -> Option<Position>;
     fn move_up(&mut self) -> Option<&mut Self>;
-    fn pos(&self) -> Position;
     fn index(&self) -> usize;
-    fn set_contents(&mut self, data: String) -> Result<&mut Self, Self::Error>;
-    fn set_pos(&mut self, pos: Position) -> Result<&mut Self, Self::Error>;
+    fn row_content(&self, pos: Position) -> &[u8];
+    fn set_row_content(&mut self, data: String) -> Result<&mut Self, Self::Error>;
 }

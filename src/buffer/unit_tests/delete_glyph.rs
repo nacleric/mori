@@ -124,7 +124,7 @@ fn delete_glyph__backward_delete_from_data_model_removes_the_expected_glyph(
 
     // Then
     assert_eq!(res, expected_opt_glyph);
-    assert_eq!(sut.contents(), expected_buffer.as_bytes());
+    assert_eq!(sut.row_content(), expected_buffer.as_bytes());
     Ok(())
 }
 
@@ -144,6 +144,6 @@ fn delete_glyph__forward_delete_from_data_model_removes_the_expected_glyph() -> 
 
     // Then
     assert_eq!(res, expected_opt_glyph);
-    assert_eq!(sut.contents(), expected_buffer.as_bytes());
+    assert_eq!(sut.row_content(), expected_buffer.as_bytes());
     Ok(())
 }

@@ -12,5 +12,5 @@ fn delete_glyphs__remove_data_from_entire_buffer_yields_empty_buffer() {
     let res = sut.delete_glyphs();
 
     // Then
-    assert_eq!(res.contents(), expected_result.as_bytes());
+    assert_eq!(res.row_content(), expected_result.as_bytes());
 }

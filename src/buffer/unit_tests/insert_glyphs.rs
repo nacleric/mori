@@ -11,7 +11,7 @@ fn insert_glyphs__adding_multiple_glyphs_yields_model_with_a_sentence() {
     let res = sut.insert_glyphs(sentence.chars());
 
     // Then
-    assert_eq!(res.contents(), expected_result.as_bytes());
+    assert_eq!(res.row_content(), expected_result.as_bytes());
 }
 
 #[test]
@@ -25,5 +25,5 @@ fn insert_glyphs__adding_weird_glyphs_yields_model_with_a_sentence() {
     let res = sut.insert_glyphs(sentence.chars());
 
     // Then
-    assert_eq!(res.contents(), expected_result.as_bytes());
+    assert_eq!(res.row_content(), expected_result.as_bytes());
 }
