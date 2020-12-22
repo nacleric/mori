@@ -33,12 +33,12 @@ impl Position {
     }
 
     pub fn move_left(&self) -> Position {
-        let pos = Position::new(self.col() - 1, self.row());
+        let pos = Position::new(self.col().saturating_sub(1), self.row());
         pos
     }
 
     pub fn move_right(&self) -> Position {
-        let pos = Position::new(self.col() + 1, self.row());
+        let pos = Position::new(self.col().saturating_add(1), self.row());
         pos
     }
 

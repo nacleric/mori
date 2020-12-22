@@ -61,7 +61,6 @@ impl GlyphBuffer for Buffer {
         self.rows.clone()
     }
 
-    /*
     // Semantically guarantees something gets deleted but if theres nothing to delete than innacurate name
     // TODO: add Position as an argument
     fn delete_glyph(&mut self, direction: Direction, pos: Position) -> (Position, Option<char>) {
@@ -74,17 +73,13 @@ impl GlyphBuffer for Buffer {
                 let opt_removed_glyph = glyphs.chars().nth(col).map(|removed_glyph| {
                     glyphs.remove(col);
 
-                    self.set_row_content(glyphs).unwrap_or_else(|_| {
+                    self.set_row_content(pos, glyphs).unwrap_or_else(|_| {
                         unreachable!(
                             "`set_row_content()` is always expected to update the buffer after glyph is deleted"
                         )
                     });
                     // Note: Only move_left() if at the end of line (will probably be in a policy function)
-                    self.move_left().unwrap_or_else(|| {
-                        unreachable!(
-                            "`move_left()` expected to always suceed immediately following `delete()`."
-                        )
-                    });
+                    // pos.move_left();
                     removed_glyph
                 });
                 (Position::new(col, row), opt_removed_glyph)
@@ -96,18 +91,14 @@ impl GlyphBuffer for Buffer {
                 let opt_removed_glyph = glyphs.chars().nth(col.saturating_sub(1)).map(|removed_glyph| {
                     glyphs.remove(col.saturating_sub(1));
 
-                    self.set_row_content(glyphs).unwrap_or_else(|_| {
+                    self.set_row_content(pos, glyphs).unwrap_or_else(|_| {
                         unreachable!(
                             "`set_row_content()` is always expected to update the buffer after glyph is deleted"
                         )
                     });
                     if col != 0 {
                         // Note: If at beginning of line *don't* move left (will probably be in a policy function)
-                        self.move_left().unwrap_or_else(|| {
-                            unreachable!(
-                                "`move_left()` expected to always succeed immediately following `delete()`."
-                            )
-                        });
+                        pos.move_left();
                     }
                     removed_glyph
                 });
@@ -115,7 +106,6 @@ impl GlyphBuffer for Buffer {
             }
         }
     }
-    */
 
     // TODO: Will need policies for movement. Switch back to index grapheme eventually
     fn insert_glyph(&mut self, pos: Position, glyph: char) -> Position {
@@ -146,17 +136,26 @@ impl GlyphBuffer for Buffer {
     // make a separate accessor for the ENTIRE buffer
     // TODO: make content only handle a single line
     fn row_content(&self, pos: Position) -> &[u8] {
-        let (_col, row) = pos.as_tuple();
+        let (_ , row) = pos.as_tuple();
         self.rows[row].as_bytes()
     }
 
     // Might not need this
-    fn set_row_content(&mut self, data: String) -> Result<&mut Self, Self::Error> {
-        // self.data = data;
-        // Ok(self)
-        unimplemented!();
+    fn set_row_content(&mut self, pos: Position, data: String) -> Result<&mut Self, Self::Error> {
+        let (col, row) = pos.as_tuple();
+        self.rows[row] = data;
+        Ok(self)
     }
 }
+
+// How default is derived
+// impl Default for Buffer {
+//     fn default() -> Self {
+//         Self { 
+//             rows: vec![String::new()],
+//         }
+//     }
+// }
 
 impl From<Vec<String>> for Buffer {
     fn from(data: Vec<String>) -> Self {

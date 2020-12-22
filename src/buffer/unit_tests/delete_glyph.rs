@@ -4,13 +4,16 @@ fn delete_glyph__backward_delete_an_empty_buffer_does_nothing() {
     // Given
     let expected_opt_glyph = None;
     let expected_buffer = Buffer::new();
+    let pos = Position::default();
+    let expected_pos = Position::default();
+    let expected_result = (expected_pos, expected_opt_glyph);
     let mut sut = Buffer::new();
 
     // When
-    let res = sut.delete_glyph(Direction::Backward);
+    let res = sut.delete_glyph(Direction::Backward, pos);
 
     // Then
-    assert_eq!(res, expected_opt_glyph);
+    assert_eq!(res, expected_result);
     assert_eq!(sut, expected_buffer);
 }
 
@@ -19,13 +22,16 @@ fn delete_glyph__forward_delete_an_empty_buffer_does_nothing() {
     // Given
     let expected_opt_glyph = None;
     let expected_buffer = Buffer::new();
+    let pos = Position::default();
+    let expected_pos = Position::default();
+    let expected_result = (expected_pos, expected_opt_glyph);
     let mut sut = Buffer::new();
 
     // When
-    let res = sut.delete_glyph(Direction::Forward);
+    let res = sut.delete_glyph(Direction::Forward, pos);
 
     // Then
-    assert_eq!(res, expected_opt_glyph);
+    assert_eq!(res, expected_result);
     assert_eq!(sut, expected_buffer);
 }
 
@@ -36,16 +42,16 @@ fn delete_glyph__backward_delete_sole_glyph_returns_empty_buffer() {
     let glyph = 'a';
     let expected_opt_glyph = Some(glyph);
     let expected_buffer = Buffer::new();
-    let mut sut = Buffer::new();
-    sut.insert_glyph(glyph);
-    let cursor_pos = 1;
-    sut.set_pos(Position::new(cursor_pos, 0)).unwrap();
+    let pos = Position::new(1, 0);
+    let expected_pos = Position::default();
+    let expected_result = (expected_pos, expected_opt_glyph);
+    let mut sut = Buffer::from(vec![glyph.to_string()]);
 
     // When
-    let res = sut.delete_glyph(Direction::Backward);
+    let res = sut.delete_glyph(Direction::Backward, pos);
 
     // Then
-    assert_eq!(res, expected_opt_glyph);
+    assert_eq!(res, expected_result);
     assert_eq!(sut, expected_buffer);
 }
 
@@ -55,100 +61,95 @@ fn delete_glyph__backward_delete_sole_weird_glyph_returns_empty_buffer() {
     let glyph = '你';
     let expected_opt_glyph = Some(glyph);
     let expected_buffer = Buffer::new();
-    let mut sut = Buffer::new();
-    sut.insert_glyph(glyph);
-    let cursor_pos = 1;
-    sut.set_pos(Position::new(cursor_pos, 0)).unwrap();
+    let pos = Position::new(1, 0);
+    let expected_pos = Position::default();
+    let expected_result = (expected_pos, expected_opt_glyph);
+    let mut sut = Buffer::from(vec![glyph.to_string()]);
 
     // When
-    let res = sut.delete_glyph(Direction::Backward);
+    let res = sut.delete_glyph(Direction::Backward, pos);
 
     // Then
-    assert_eq!(res, expected_opt_glyph);
+    assert_eq!(res, expected_result);
     assert_eq!(sut, expected_buffer);
 }
 
 #[test]
-fn delete_glyph__forward_delete_sole_glyph_returns_empty_buffer() -> Result<()> {
+fn delete_glyph__forward_delete_sole_glyph_returns_empty_buffer() {
     // Given
     let glyph = 'a';
     let expected_opt_glyph = Some(glyph);
     let expected_buffer = Buffer::new();
-    let mut sut = Buffer::new();
-    sut.insert_glyph(glyph);
-    sut.set_pos(Position::new(0, 0))?;
+    let pos = Position::default();
+    let expected_pos = Position::new(0, 0);
+    let expected_result = (expected_pos, expected_opt_glyph);
+    let mut sut = Buffer::from(vec![glyph.to_string()]);
 
     // When
-    let res = sut.delete_glyph(Direction::Forward);
+    let res = sut.delete_glyph(Direction::Forward, pos);
 
     // Then
-    assert_eq!(res, expected_opt_glyph);
+    assert_eq!(res, expected_result);
     assert_eq!(sut, expected_buffer);
-    Ok(())
 }
 
 #[test]
-fn delete_glyph__forward_delete_sole_weird_glyph_returns_empty_buffer() -> Result<()> {
+fn delete_glyph__forward_delete_sole_weird_glyph_returns_empty_buffer() {
     // Given
     let glyph = '你';
     let expected_opt_glyph = Some(glyph);
     let expected_buffer = Buffer::new();
-    let mut sut = Buffer::new();
-    sut.insert_glyph(glyph);
-    sut.set_pos(Position::new(0, 0))?;
+    let pos = Position::default();
+    let expected_pos = Position::new(0, 0);
+    let expected_result = (expected_pos, expected_opt_glyph);
+    let mut sut = Buffer::from(vec![glyph.to_string()]);
 
     // When
-    let res = sut.delete_glyph(Direction::Forward);
+    let res = sut.delete_glyph(Direction::Forward, pos);
 
     // Then
-    assert_eq!(res, expected_opt_glyph);
+    assert_eq!(res, expected_result);
     assert_eq!(sut, expected_buffer);
-    Ok(())
 }
 
 // Doesn't work yet
 #[test]
-fn delete_glyph__backward_delete_from_data_model_removes_the_expected_glyph(
-) -> Result<()> {
+fn delete_glyph__backward_delete_from_data_model_removes_the_expected_glyph() {
     // Given
-    let bad_sentence = String::from("greenb sleeping mask");
-    let expected_buffer = String::from("green sleeping mask");
+    let expected_buffer = Buffer::from(vec![String::from("green sleeping mask")]);
     let expected_opt_glyph = Some('b');
-    let glyph_pos = 6;
-    let mut sut = Buffer::new();
-    sut.insert_glyphs(bad_sentence.chars());
-    sut.set_pos(Position::new(glyph_pos, 0))?;
+    let pos = Position::new(6, 0);
+    let expected_pos = Position::new(5, 0);
+    let expected_result = (expected_pos, expected_opt_glyph);
+    let mut sut = Buffer::from(vec![String::from("greenb sleeping mask")]);
 
     // When
-    let res = sut.delete_glyph(Direction::Backward);
+    let res = sut.delete_glyph(Direction::Backward, pos);
 
     // Then
-    assert_eq!(res, expected_opt_glyph);
-    assert_eq!(sut.row_content(), expected_buffer.as_bytes());
-    Ok(())
+    assert_eq!(res, expected_result);
+    assert_eq!(sut, expected_buffer);
 }
 
 #[test]
-fn delete_glyph__forward_delete_from_data_model_removes_the_expected_glyph() -> Result<()> {
+fn delete_glyph__forward_delete_from_data_model_removes_the_expected_glyph() {
     // Given
-    let bad_sentence = String::from("greenb sleeping mask");
-    let expected_buffer = String::from("green sleeping mask");
+    let expected_buffer = Buffer::from(vec![String::from("green sleeping mask")]);
     let expected_opt_glyph = Some('b');
-    let mut sut = Buffer::new();
-    sut.insert_glyphs(bad_sentence.chars());
-    let cursor_pos = 5;
-    sut.set_pos(Position::new(cursor_pos, 0))?;
+    let pos = Position::new(5, 0);
+    let expected_pos = Position::new(5, 0);
+    let expected_result = (expected_pos, expected_opt_glyph);
+    let mut sut = Buffer::from(vec![String::from("greenb sleeping mask")]);
 
     // When
-    let res = sut.delete_glyph(Direction::Forward);
+    let res = sut.delete_glyph(Direction::Forward, pos);
 
     // Then
-    assert_eq!(res, expected_opt_glyph);
-    assert_eq!(sut.row_content(), expected_buffer.as_bytes());
-    Ok(())
+    assert_eq!(res, expected_result);
+    assert_eq!(sut, expected_buffer);
 }
 
-#[test]
-fn delete_glyph__forward_delete_end_of_line_n_pulls_in_line_n_plus_1() {
-    unimplemented!()
-}
+// #[test]
+// fn delete_glyph__forward_delete_end_of_line_n_pulls_in_line_n_plus_1() {
+//     unimplemented!()
+// }
