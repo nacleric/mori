@@ -23,36 +23,7 @@ fn main() -> Result<()> {
     let filepath = CliArgs::from_args();
     let data = std::fs::read_to_string(filepath.path)?;
     let mut buf = Buffer::new();
-    buf.insert_glyphs(data.chars());
 
     // initialize_buffer(data)
-
-    loop {
-        let mut input = String::new();
-
-        io::stdin()
-            .read_line(&mut input)
-            .ok()
-            .expect("Couldn't read line");
-
-        match input.as_str() {
-            "#db\n" => {
-                buf.delete_glyph(direction::Direction::Backward);
-            },
-            "#df\n" => {
-                buf.delete_glyph(direction::Direction::Forward);
-            },
-            "#l\n" => {
-                buf.move_left();
-            },
-            "#r\n" => {
-                buf.move_right();
-            },
-            _ => {
-                buf.insert_glyphs(input.chars());
-            },
-        }
-
-        println!("{:?}", buf);
-    }
+    unimplemented!()
 }

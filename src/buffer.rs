@@ -1,7 +1,7 @@
 pub mod direction;
 #[cfg(test)]
 mod unit_tests;
-use crate::interfaces::View;
+use crate::{interfaces::View, position};
 use crate::{
     error::{Error, Result},
     interfaces::GlyphBuffer,
@@ -19,28 +19,32 @@ pub struct Buffer {
 impl Buffer {
     pub fn new() -> Self {
         Self {
-            rows: Vec::default(),
+            // rows: Vec::default(),
+            rows: vec![String::new()],
         }
     }
 
     /// Removes data from the buffer but does not remove the entire buffer
-    pub fn delete_glyphs(&mut self) -> &mut Self {
-        // self.data.clear();
-        // self
-        unimplemented!();
+    pub fn clear(&mut self) -> (Position, Vec<String>) {
+        let pos = Position::new(0, 0 );
+        let orig_value = std::mem::replace(&mut self.rows, Vec::new());
+        (pos, orig_value)
     }
 
-    pub fn insert_glyphs<I: Iterator<Item = char>>(&mut self, glyphs: I) -> &mut Self {
+    // TODO insert might need to be recursive
+    pub fn insert_glyphs<I: Iterator<Item = char>>(&mut self, glyphs: I, pos: Position) {
         glyphs.into_iter().for_each(|c| {
-            self.insert_glyph(c);
+            let pos = self.insert_glyph(pos, c);
         });
-        self
     }
 
-    pub fn add_row() {
+    pub fn insert_row(&mut self, pos: Position) -> Position { 
         // Enter Key-event: Add a new empty buffer when pressing enter
         // (Policy) If enter is pressed mid-string, data to the right of cursor is put into new line
-        unimplemented!()
+        let (_, row) = pos.as_tuple();
+        self.rows.insert(row + 1, String::new());
+        let new_pos = pos.move_up();
+        new_pos
     }
 
     pub fn delete_row() {
@@ -53,93 +57,73 @@ impl Buffer {
 impl GlyphBuffer for Buffer {
     type Error = Error;
 
-    fn content(&self, pos: Position) -> Vec<String> {
-        self.rows
+    fn content(&self) -> Vec<String> {
+        self.rows.clone()
     }
 
+    /*
     // Semantically guarantees something gets deleted but if theres nothing to delete than innacurate name
     // TODO: add Position as an argument
-    fn delete_glyph(&mut self, direction: Direction, pos: Position) -> Option<char> {
+    fn delete_glyph(&mut self, direction: Direction, pos: Position) -> (Position, Option<char>) {
         let (col, row) = pos.as_tuple(); 
-        let glyph = match direction {
+        match direction {
             Direction::Forward => {
                 let mut glyphs = std::str::from_utf8(self.row_content(pos))
                     .expect("Returns a &str")
                     .to_owned();
-                let removed_glyph = glyphs.chars().nth(col)?;
-                glyphs.remove(col);
+                let opt_removed_glyph = glyphs.chars().nth(col).map(|removed_glyph| {
+                    glyphs.remove(col);
 
-                self.set_row_content(glyphs).unwrap_or_else(|_| {
-                    unreachable!(
-                        "`set_row_content()` is always expected to update the buffer after glyph is deleted"
-                    )
+                    self.set_row_content(glyphs).unwrap_or_else(|_| {
+                        unreachable!(
+                            "`set_row_content()` is always expected to update the buffer after glyph is deleted"
+                        )
+                    });
+                    // Note: Only move_left() if at the end of line (will probably be in a policy function)
+                    self.move_left().unwrap_or_else(|| {
+                        unreachable!(
+                            "`move_left()` expected to always suceed immediately following `delete()`."
+                        )
+                    });
+                    removed_glyph
                 });
-                // Note: Only move_left() if at the end of line (will probably be in a policy function)
-                self.move_left().unwrap_or_else(|| {
-                    unreachable!(
-                        "`move_left()` expected to always suceed immediately following `delete()`."
-                    )
-                });
-                removed_glyph
+                (Position::new(col, row), opt_removed_glyph)
             }
             Direction::Backward => {
                 let mut glyphs = std::str::from_utf8(self.row_content(pos))
                     .expect("Returns a &str")
                     .to_owned();
-                let removed_glyph = glyphs.chars().nth(col.saturating_sub(1))?;
-                glyphs.remove(col.saturating_sub(1));
+                let opt_removed_glyph = glyphs.chars().nth(col.saturating_sub(1)).map(|removed_glyph| {
+                    glyphs.remove(col.saturating_sub(1));
 
-                self.set_row_content(glyphs).unwrap_or_else(|_| {
-                    unreachable!(
-                        "`set_row_content()` is always expected to update the buffer after glyph is deleted"
-                    )
-                });
-                if col != 0 {
-                    // Note: If at beginning of line *don't* move left (will probably be in a policy function)
-                    self.move_left().unwrap_or_else(|| {
+                    self.set_row_content(glyphs).unwrap_or_else(|_| {
                         unreachable!(
-                            "`move_left()` expected to always succeed immediately following `delete()`."
+                            "`set_row_content()` is always expected to update the buffer after glyph is deleted"
                         )
                     });
-                }
-                removed_glyph
+                    if col != 0 {
+                        // Note: If at beginning of line *don't* move left (will probably be in a policy function)
+                        self.move_left().unwrap_or_else(|| {
+                            unreachable!(
+                                "`move_left()` expected to always succeed immediately following `delete()`."
+                            )
+                        });
+                    }
+                    removed_glyph
+                });
+                (Position::new(col.saturating_sub(1), row), opt_removed_glyph)
             }
-        };
-        Some(glyph)
+        }
     }
+    */
 
-    fn insert_glyph(&mut self, glyph: char, pos: Position) -> Position {
-        // TODO: From Rust traceback
-        let (_col, row) = pos.as_tuple(); 
-        self.rows[row].insert(self.index(), glyph);
-        self.move_right(pos).unwrap_or_else(|| {
-            unreachable!(
-                "`move_right()` expected to always succeed immediately following an `insert()`."
-            )
-        });
-        pos
-    }
-
-    // TODO: pos state removed. Return Position instead?
-    fn move_down(&mut self) -> Option<&mut Self> {
-        unimplemented!();
-    }
-
-    fn move_left(&mut self) -> Option<&mut Self> {
-        unimplemented!();
-    }
-
-    fn move_right(&mut self, pos: Position) -> Option<Position> {
-        // unimplemented!();
-        // Create new Position or reference old pos?
-        // v1: pos.col() + 1;
-        let (col, row) = pos.as_tuple();
-        let new_pos = Position::new(col + 1, row);
-        Some(new_pos)
-    }
-
-    fn move_up(&mut self) -> Option<&mut Self> {
-        unimplemented!();
+    // TODO: Will need policies for movement. Switch back to index grapheme eventually
+    fn insert_glyph(&mut self, pos: Position, glyph: char) -> Position {
+        let (col, row) = pos.as_tuple(); 
+        // let index = self.index();
+        self.rows[row].insert(col, glyph);
+        let new_pos = pos.move_right();
+        new_pos
     }
 
     // TODO: WIP needs to account for rows and columns. Vec of String
@@ -171,6 +155,14 @@ impl GlyphBuffer for Buffer {
         // self.data = data;
         // Ok(self)
         unimplemented!();
+    }
+}
+
+impl From<Vec<String>> for Buffer {
+    fn from(data: Vec<String>) -> Self {
+        let mut buf = Buffer::new();
+        buf.rows = data;
+        buf
     }
 }
 

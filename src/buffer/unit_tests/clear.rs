@@ -1,7 +1,7 @@
 use super::*;
 
 #[test]
-fn delete_glyphs__remove_data_from_entire_buffer_yields_empty_buffer() {
+fn clear__remove_data_from_entire_buffer_yields_empty_buffer() {
     // Given
     let sentence = String::from("green sleeping mask");
     let expected_result = String::from("");

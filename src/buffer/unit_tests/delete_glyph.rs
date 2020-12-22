@@ -147,3 +147,8 @@ fn delete_glyph__forward_delete_from_data_model_removes_the_expected_glyph() -> 
     assert_eq!(sut.row_content(), expected_buffer.as_bytes());
     Ok(())
 }
+
+#[test]
+fn delete_glyph__forward_delete_end_of_line_n_pulls_in_line_n_plus_1() {
+    unimplemented!()
+}
