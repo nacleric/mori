@@ -3,17 +3,17 @@ use super::*;
 // TODO: this
 // String not inserted into buffer
 #[test]
-fn insert_glyph__adding_a_glyph_to_an_empty_data_model_yields_a_model_containing_only_the_glyph(
+fn insert_grapheme__adding_a_grapheme_to_an_empty_data_model_yields_a_model_containing_only_the_grapheme(
 ) -> Result<()> {
     // Given
-    let glyph = 'a';
-    let expected_result = Buffer::from(vec![glyph.to_string()]);
+    let grapheme = 'a';
+    let expected_result = Buffer::from(vec![grapheme.to_string()]);
     let pos = Position::default(); // Sets position to 0, 0
     let expected_pos = Position::new(1, 0);
     let mut sut = Buffer::new();
 
     // When
-    let res = sut.insert_glyph(pos, glyph);
+    let res = sut.insert_grapheme(pos, grapheme);
 
     // Then
     assert_eq!(res, expected_pos);
@@ -22,17 +22,17 @@ fn insert_glyph__adding_a_glyph_to_an_empty_data_model_yields_a_model_containing
 }
 
 #[test]
-fn insert_glyph__adding_a_weird_glyph_to_an_empty_data_model_yields_a_model_containing_only_the_glyph(
+fn insert_grapheme__adding_a_weird_grapheme_to_an_empty_data_model_yields_a_model_containing_only_the_grapheme(
 ) -> Result<()> {
     // Given
-    let glyph = '你';
-    let expected_result = Buffer::from(vec![glyph.to_string()]);
+    let grapheme = '你';
+    let expected_result = Buffer::from(vec![grapheme.to_string()]);
     let pos = Position::default();
     let expected_pos = Position::new(1, 0);
     let mut sut = Buffer::new();
 
     // When
-    let res = sut.insert_glyph(pos, glyph);
+    let res = sut.insert_grapheme(pos, grapheme);
 
     // Then
     assert_eq!(res, expected_pos);
@@ -41,17 +41,17 @@ fn insert_glyph__adding_a_weird_glyph_to_an_empty_data_model_yields_a_model_cont
 }
 
 #[test]
-fn insert_glyph__adding_an_escape_character_glyph_to_an_empty_data_model_yields_escape_glyph(
+fn insert_grapheme__adding_an_escape_character_grapheme_to_an_empty_data_model_yields_escape_grapheme(
 ) -> Result<()> {
     // Given
-    let glyph = '\n';
-    let expected_result = Buffer::from(vec![glyph.to_string()]);
+    let grapheme = '\n';
+    let expected_result = Buffer::from(vec![grapheme.to_string()]);
     let pos = Position::default();
     let expected_pos = Position::new(1, 0);
     let mut sut = Buffer::new();
 
     // When
-    let res = sut.insert_glyph(pos, glyph); // maybe like this
+    let res = sut.insert_grapheme(pos, grapheme); // maybe like this
 
     // Then
     assert_eq!(res, expected_pos);
@@ -60,16 +60,16 @@ fn insert_glyph__adding_an_escape_character_glyph_to_an_empty_data_model_yields_
 }
 
 #[test]
-fn insert_glyph__adding_a_tab_to_an_empty_data_model_yields_a_tab() -> Result<()> {
+fn insert_grapheme__adding_a_tab_to_an_empty_data_model_yields_a_tab() -> Result<()> {
     // Given
-    let glyph = '\t';
-    let expected_result = Buffer::from(vec![glyph.to_string()]);
+    let grapheme = '\t';
+    let expected_result = Buffer::from(vec![grapheme.to_string()]);
     let pos = Position::default();
     let expected_pos = Position::new(1, 0);
     let mut sut = Buffer::new();
 
     // When
-    let res = sut.insert_glyph(pos, glyph);
+    let res = sut.insert_grapheme(pos, grapheme);
 
     // Then
     assert_eq!(res, expected_pos);
@@ -78,16 +78,17 @@ fn insert_glyph__adding_a_tab_to_an_empty_data_model_yields_a_tab() -> Result<()
 }
 
 #[test]
-fn insert_glyph__adding_a_glyph_in_a_specific_position_yields_a_glyph_yields_inserted_glyph_in_correct_location() -> Result<()> {
+fn insert_grapheme__adding_a_grapheme_in_a_specific_position_yields_a_grapheme_yields_inserted_grapheme_in_correct_location(
+) -> Result<()> {
     // Given
-    let glyph = 'n';
-    let expected_result= Buffer::from(vec![String::from("green sleeping mask")]);
+    let grapheme = 'n';
+    let expected_result = Buffer::from(vec![String::from("green sleeping mask")]);
     let pos = Position::new(4, 0);
     let expected_pos = Position::new(5, 0);
     let mut sut = Buffer::from(vec![String::from("gree sleeping mask")]);
 
     // When
-    let res = sut.insert_glyph(pos, glyph);
+    let res = sut.insert_grapheme(pos, grapheme);
 
     // Then
     assert_eq!(sut, expected_result);

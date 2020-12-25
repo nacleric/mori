@@ -4,11 +4,11 @@ use super::*;
 #[test]
 fn move_down__current_pos_col_4_row_2_yields_col_4_row_1() {
     // Given
-    let expected_coord= (4, 1);
+    let expected_coord = (4, 1);
     let sut = Position::new(4, 2);
 
     // When
-    let res = sut.move_down();
+    let res = sut.move_up();
 
     // Then
     assert_eq!(res.as_tuple(), expected_coord);
@@ -47,7 +47,7 @@ fn move_up__current_pos_col_4_row_2_yields_col_4_row_3() {
     let sut = Position::new(4, 2);
 
     // When
-    let res = sut.move_up();
+    let res = sut.move_down();
 
     // Then
     assert_eq!(res.as_tuple(), expected_coord);

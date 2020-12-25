@@ -4,8 +4,8 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 
 #[derive(Debug, Error, Eq, PartialEq)]
 pub enum Error {
-    #[error("Error: failed to insert glyph {}", 0)]
-    FailedToInsertGlyph(char),
+    #[error("Error: failed to insert grapheme {}", 0)]
+    FailedToInsertgrapheme(char),
     #[error("Error: Invalid `Position` specified {}", 0)]
     InvalidPosition(crate::Position),
     #[error("IoError: {}", 0)]
@@ -14,7 +14,7 @@ pub enum Error {
 
 impl From<char> for Error {
     fn from(c: char) -> Self {
-        Self::FailedToInsertGlyph(c)
+        Self::FailedToInsertgrapheme(c)
     }
 }
 
