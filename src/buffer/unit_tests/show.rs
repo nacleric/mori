@@ -16,9 +16,7 @@ fn empty_buffer_displays_nothing() {
     assert_eq!(stdout_mock, expected_res);
 }
 
-// TODO: make compatible with new api
 #[test]
-#[ignore]
 fn show__buffer_displays_a_single_grapheme() {
     // Given
     let expected_res = String::from("a").into_bytes();
@@ -36,7 +34,6 @@ fn show__buffer_displays_a_single_grapheme() {
 }
 
 #[test]
-#[ignore]
 fn show__buffer_displays_multiple_graphemes() {
     // Given
     let sentence = String::from("hello world");

@@ -21,11 +21,9 @@ impl Buffer {
         Self::default()
     }
 
-    /// Removes data from the buffer but does not remove the entire buffer
-    pub fn clear(&mut self) -> (Position, Vec<String>) {
-        let pos = Position::new(0, 0);
-        let orig_value = std::mem::replace(&mut self.rows, Vec::new());
-        (pos, orig_value)
+    // WIP: needs to implement a range
+    pub fn delete_graphemes(&mut self) -> (Position, Vec<String>) {
+        unimplemented!()
     }
 
     // TODO insert might need to be recursive

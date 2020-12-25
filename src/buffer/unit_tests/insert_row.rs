@@ -3,9 +3,9 @@ use super::*;
 #[test]
 fn insert_row__adding_a_row_to_buffer_yields_a_buffer_with_2_rows() {
     // Given
-    let expected_result = Buffer::from(vec![String::new(), String::new()]);
     let pos = Position::default();
     let expected_pos = Position::new(0, 1);
+    let expected_result = Buffer::from(vec![String::new(), String::new()]);
     let mut sut = Buffer::new();
 
     // When
