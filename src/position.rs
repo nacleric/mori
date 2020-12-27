@@ -1,3 +1,4 @@
+use crate::interfaces::Movement;
 #[cfg(test)]
 mod unit_tests;
 
@@ -25,24 +26,26 @@ impl Position {
     pub fn row(&self) -> usize {
         self.row
     }
+}
 
+impl Movement for Position {
     // TODO: Movements will need policy injected (constructor dependency injection) maybe try composition
-    pub fn move_down(&self) -> Position {
+    fn move_down(&self) -> Position {
         let pos = Position::new(self.col(), self.row() + 1);
         pos
     }
 
-    pub fn move_left(&self) -> Position {
+    fn move_left(&self) -> Position {
         let pos = Position::new(self.col() - 1, self.row());
         pos
     }
 
-    pub fn move_right(&self) -> Position {
+    fn move_right(&self) -> Position {
         let pos = Position::new(self.col() + 1, self.row());
         pos
     }
 
-    pub fn move_up(&self) -> Position {
+    fn move_up(&self) -> Position {
         let pos = Position::new(self.col(), self.row() - 1);
         pos
     }

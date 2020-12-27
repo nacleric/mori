@@ -4,6 +4,7 @@ mod unit_tests;
 use crate::{
     error::{Error, Result},
     interfaces::GraphemeBuffer,
+    interfaces::Movement,
     position::Position,
 };
 use crate::{interfaces::View, position};
@@ -26,8 +27,6 @@ impl Buffer {
         unimplemented!()
     }
 
-    // TODO insert might need to be recursive
-    // insert_graphemes owns pos now
     pub fn insert_graphemes<I: Iterator<Item = char>>(
         &mut self,
         mut pos: Position,
@@ -136,16 +135,11 @@ impl GraphemeBuffer for Buffer {
         unimplemented!();
     }
 
-    // show row_content for the entire buffer or just a line?
-    // !Most likely accessing content of a single line
-    // make a separate accessor for the ENTIRE buffer
-    // TODO: make content only handle a single line
     fn row_content(&self, pos: Position) -> &[u8] {
         let (_, row) = pos.as_tuple();
         self.rows[row].as_bytes()
     }
 
-    // Might not need this
     fn set_row_content(&mut self, pos: Position, data: String) -> Result<&mut Self, Self::Error> {
         let (_col, row) = pos.as_tuple();
         self.rows[row] = data;
@@ -172,12 +166,9 @@ impl From<Vec<String>> for Buffer {
 }
 
 impl View for Buffer {
-    // Note: Constrains type to types that implement the write Trait
+    // Note: Passing a trait constrains type to types that implement the write Trait
     fn show<W: Write>(&self, writer: &mut W) -> Result<&Self> {
-        // [
-        //     "asdasd" &String
-        //     "asdasdasd"
-        // ] -> &[u8]
+        // Note: byte smaller than pointer, better to copy than reference(&)
         writer.write_all(
             &self
                 .content()
@@ -193,4 +184,3 @@ impl View for Buffer {
     }
 }
 
-// byte smaller than pointer, better to copy than reference(&)
