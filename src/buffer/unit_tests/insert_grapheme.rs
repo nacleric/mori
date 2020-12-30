@@ -9,7 +9,7 @@ fn insert_grapheme__adding_a_grapheme_to_an_empty_data_model_yields_a_model_cont
     let pos = Position::default(); // Sets position to 0, 0
     let expected_pos = Position::new(1, 0);
     let grapheme = 'a';
-    let expected_result = Buffer::from(vec![grapheme.to_string()]);
+    let expected_res = Buffer::from(vec![grapheme.to_string()]);
     let mut sut = Buffer::new();
 
     // When
@@ -17,7 +17,7 @@ fn insert_grapheme__adding_a_grapheme_to_an_empty_data_model_yields_a_model_cont
 
     // Then
     assert_eq!(res, expected_pos);
-    assert_eq!(sut, expected_result);
+    assert_eq!(sut, expected_res);
     Ok(())
 }
 
@@ -28,7 +28,7 @@ fn insert_grapheme__adding_a_weird_grapheme_to_an_empty_data_model_yields_a_mode
     let pos = Position::default();
     let expected_pos = Position::new(1, 0);
     let grapheme = '你';
-    let expected_result = Buffer::from(vec![grapheme.to_string()]);
+    let expected_res = Buffer::from(vec![grapheme.to_string()]);
     let mut sut = Buffer::new();
 
     // When
@@ -36,7 +36,7 @@ fn insert_grapheme__adding_a_weird_grapheme_to_an_empty_data_model_yields_a_mode
 
     // Then
     assert_eq!(res, expected_pos);
-    assert_eq!(sut, expected_result);
+    assert_eq!(sut, expected_res);
     Ok(())
 }
 
@@ -45,7 +45,7 @@ fn insert_grapheme__adding_an_escape_character_grapheme_to_an_empty_data_model_y
 ) -> Result<()> {
     // Given
     let grapheme = '\n';
-    let expected_result = Buffer::from(vec![grapheme.to_string()]);
+    let expected_res = Buffer::from(vec![grapheme.to_string()]);
     let pos = Position::default();
     let expected_pos = Position::new(1, 0);
     let mut sut = Buffer::new();
@@ -55,7 +55,7 @@ fn insert_grapheme__adding_an_escape_character_grapheme_to_an_empty_data_model_y
 
     // Then
     assert_eq!(res, expected_pos);
-    assert_eq!(sut, expected_result);
+    assert_eq!(sut, expected_res);
     Ok(())
 }
 
@@ -63,7 +63,7 @@ fn insert_grapheme__adding_an_escape_character_grapheme_to_an_empty_data_model_y
 fn insert_grapheme__adding_a_tab_to_an_empty_data_model_yields_a_tab() -> Result<()> {
     // Given
     let grapheme = '\t';
-    let expected_result = Buffer::from(vec![grapheme.to_string()]);
+    let expected_res = Buffer::from(vec![grapheme.to_string()]);
     let pos = Position::default();
     let expected_pos = Position::new(1, 0);
     let mut sut = Buffer::new();
@@ -73,7 +73,7 @@ fn insert_grapheme__adding_a_tab_to_an_empty_data_model_yields_a_tab() -> Result
 
     // Then
     assert_eq!(res, expected_pos);
-    assert_eq!(sut, expected_result);
+    assert_eq!(sut, expected_res);
     Ok(())
 }
 
@@ -84,14 +84,14 @@ fn insert_grapheme__adding_a_grapheme_in_a_specific_position_yields_a_grapheme_y
     let pos = Position::new(4, 0);
     let expected_pos = Position::new(5, 0);
     let grapheme = 'n';
-    let expected_result = Buffer::from(vec![String::from("green sleeping mask")]);
+    let expected_res = Buffer::from(vec![String::from("green sleeping mask")]);
     let mut sut = Buffer::from(vec![String::from("gree sleeping mask")]);
 
     // When
     let res = sut.insert_grapheme(pos, grapheme);
 
     // Then
-    assert_eq!(sut, expected_result);
+    assert_eq!(sut, expected_res);
     assert_eq!(res, expected_pos);
     Ok(())
 }

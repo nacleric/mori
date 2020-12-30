@@ -3,9 +3,8 @@ pub mod direction;
 mod unit_tests;
 use crate::{
     error::{Error, Result},
-    interfaces::GraphemeBuffer,
-    interfaces::Movement,
-    position::Position,
+    interfaces::{GraphemeBuffer, MovementPolicy},
+    position::{ColumnState, Position, RowState},
 };
 use crate::{interfaces::View, position};
 use direction::Direction;
@@ -78,8 +77,6 @@ impl GraphemeBuffer for Buffer {
                             "`set_row_content()` is always expected to update the buffer after grapheme is deleted"
                         )
                     });
-                    // Note: Only move_left() if at the end of line (will probably be in a policy function)
-                    // pos.move_left();
                     removed_grapheme
                 });
                 (Position::new(col, row), opt_removed_grapheme)
@@ -96,10 +93,7 @@ impl GraphemeBuffer for Buffer {
                             "`set_row_content()` is always expected to update the buffer after grapheme is deleted"
                         )
                     });
-                    if col != 0 {
-                        // Note: If at beginning of line *don't* move left (will probably be in a policy function)
-                        pos.move_left();
-                    }
+                    pos.move_left();
                     removed_grapheme
                 });
                 (
@@ -165,6 +159,129 @@ impl From<Vec<String>> for Buffer {
     }
 }
 
+// TODO: move this to top of the file but this will probably be redone
+pub enum Actions {
+    AddRow,
+    DeleteBackward,
+    DeleteForward,
+    DeleteRow,
+    Insert,
+    MoveDown,
+    MoveLeft,
+    MoveRight,
+    MoveUp,
+}
+
+impl MovementPolicy for Buffer {
+    // Given a position, checks possible moves, returns action type position state. if state is invalid position needs to stay the same
+
+    // 3 action types: Move, Insert, Delete
+    fn check_col_state(&self, pos: Position) -> ColumnState {
+        // Might have to return a result type
+        let (col, row) = pos.as_tuple();
+        let max_length = self.rows[row].len() - 1;
+
+        let state: ColumnState;
+        if col == 0 {
+            state = ColumnState::BeginningOfLine;
+        } else if col == max_length {
+            state = ColumnState::EndOfLine;
+        } else if col > 0 && col < max_length {
+            state = ColumnState::MiddleOfLine
+        } else {
+            // This will need to be an error type
+            state = ColumnState::InvalidPosition;
+        }
+
+        state
+    }
+
+    fn check_row_state(&self, pos: Position) -> RowState {
+        // Might have to return a result type
+        let (_, row) = pos.as_tuple();
+        let max_length = self.rows.len() - 1;
+
+        let state: RowState;
+        if row == 0 {
+            state = RowState::UpperBound;
+        } else if row == max_length {
+            state = RowState::LowerBound;
+        } else {
+            state = RowState::MiddleBound;
+        }
+
+        state
+    }
+
+    // TODO: (MIGHT DELETE) check_lower & check_upper might not be needed. Backspacing BOL will just push content to the end of string. But if length is 0 than it won't matter
+    // Checks if the Row below current Position is populated
+    fn check_lower_row(&self, pos: Position) -> bool {
+        let (_, row) = pos.as_tuple();
+        if self.rows[row + 1].len() > 0 {
+            true
+        } else {
+            false
+        }
+    }
+
+    // Checks if the Row above current Position is populated
+    fn check_upper_row(&self, pos: Position) -> bool {
+        let (_, row) = pos.as_tuple();
+        if self.rows[row - 1].len() > 0 {
+            true
+        } else {
+            false
+        }
+    }
+
+    // Hardcoding but with sprinkles
+    fn invalid_actions(&self, col_state: ColumnState, row_state: RowState) -> Vec<Actions> {
+        let mut invalid_actions = vec![];
+        match col_state {
+            ColumnState::BeginningOfLine => match row_state {
+                RowState::LowerBound => {
+                    invalid_actions.push(Actions::MoveDown);
+                    invalid_actions.push(Actions::MoveLeft);
+                }
+                RowState::MiddleBound => {
+                    invalid_actions.push(Actions::MoveLeft);
+                }
+                RowState::UpperBound => {
+                    invalid_actions.push(Actions::DeleteBackward);
+                    invalid_actions.push(Actions::MoveLeft);
+                    invalid_actions.push(Actions::MoveUp);
+                }
+            },
+            ColumnState::EndOfLine => match row_state {
+                RowState::LowerBound => {
+                    invalid_actions.push(Actions::DeleteForward);
+                    invalid_actions.push(Actions::MoveRight);
+                    invalid_actions.push(Actions::MoveDown)
+                }
+                RowState::MiddleBound => {
+                    invalid_actions.push(Actions::MoveRight);
+                }
+                RowState::UpperBound => {
+                    invalid_actions.push(Actions::MoveUp);
+                    invalid_actions.push(Actions::MoveRight);
+                }
+            },
+            ColumnState::MiddleOfLine => match row_state {
+                RowState::LowerBound => invalid_actions.push(Actions::MoveDown),
+                RowState::MiddleBound => (),
+                RowState::UpperBound => {
+                    invalid_actions.push(Actions::MoveUp);
+                }
+            },
+            ColumnState::InvalidPosition => {
+                unimplemented!()
+            }
+        }
+
+        invalid_actions
+    }
+}
+
 impl View for Buffer {
     // Note: Passing a trait constrains type to types that implement the write Trait
     fn show<W: Write>(&self, writer: &mut W) -> Result<&Self> {
@@ -173,14 +290,10 @@ impl View for Buffer {
             &self
                 .content()
                 .iter()
-                .map(|s| s
-                    .as_bytes()
-                    .iter()
-                    .map(|b| *b))
+                .map(|s| s.as_bytes().iter().map(|b| *b))
                 .flatten()
                 .collect::<Vec<u8>>(),
         )?;
         Ok(self)
     }
 }
-

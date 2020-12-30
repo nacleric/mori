@@ -4,5 +4,6 @@ mod delete_graphemes;
 mod insert_grapheme;
 mod insert_graphemes;
 mod insert_row;
+mod movement_policy;
 mod show;
 use super::*;
