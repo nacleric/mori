@@ -172,6 +172,16 @@ pub enum Actions {
     MoveUp,
 }
 
+// TODO: replace ColumnState & RowState with newtype
+struct Column(usize);  // newtype pattern 
+impl Column {
+    // "predicate" special name for function that takes no params and returns bool
+    #[inline]
+    pub fn is_beginning_of_line(&self) -> bool {
+        self.0 == 0
+    }
+}
+
 impl MovementPolicy for Buffer {
     // Given a position, checks possible moves, returns action type position state. if state is invalid position needs to stay the same
 
@@ -233,8 +243,9 @@ impl MovementPolicy for Buffer {
             false
         }
     }
-
+        
     // Hardcoding but with sprinkles
+    // TODO: Switch to required_actions
     fn invalid_actions(&self, col_state: ColumnState, row_state: RowState) -> Vec<Actions> {
         let mut invalid_actions = vec![];
         match col_state {

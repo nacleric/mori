@@ -50,9 +50,10 @@ impl Position {
         pos
     }
 
+    // TODO: homework
     pub fn move_left(&self) -> Position {
-        let pos = Position::new(self.col() - 1, self.row());
-        pos
+        let row_diff = (self.col() == 0) as usize;
+        Position::new(self.col().saturating_sub(1), self.row().saturating_sub(row_diff))
     }
 
     pub fn move_right(&self) -> Position {
