@@ -3,8 +3,8 @@ pub mod direction;
 mod unit_tests;
 use crate::{
     error::{Error, Result},
-    interfaces::{GraphemeBuffer, MovementPolicy},
-    position::{ColumnState, Position, RowState},
+    interfaces::GraphemeBuffer,
+    position::Position,
 };
 use crate::{interfaces::View, position};
 use direction::Direction;
@@ -21,28 +21,12 @@ impl Buffer {
         Self::default()
     }
 
-    // WIP: needs to implement a range
-    pub fn delete_graphemes(&mut self) -> (Position, Vec<String>) {
-        unimplemented!()
-    }
-
-    pub fn insert_graphemes<I: Iterator<Item = char>>(
-        &mut self,
-        mut pos: Position,
-        graphemes: I,
-    ) -> Position {
-        graphemes.into_iter().for_each(|c| {
-            pos = self.insert_grapheme(pos, c);
-        });
-        pos
-    }
-
     pub fn insert_row(&mut self, pos: Position) -> Position {
         // Enter Key-event: Add a new empty buffer when pressing enter
         // (Policy) If enter is pressed mid-string, data to the right of cursor is put into new line
         let (_, row) = pos.as_tuple();
         self.rows.insert(row + 1, String::new());
-        let new_pos = pos.move_down();
+        let new_pos = self.move_down(pos);
         new_pos
     }
 
@@ -50,6 +34,75 @@ impl Buffer {
         // Backspace Key-event: Remove buffer if index[0] get's deleted
         // (Policy) If elements still exist in buffer, move data to the row above it
         unimplemented!()
+    }
+
+    pub fn move_down(&self, pos: Position) -> Position {
+        let (col, row) = pos.as_tuple();
+        let lower_bound = self.rows.len() - 1;
+
+        let pos: Position;
+        if row == lower_bound {
+            pos = Position::new(col, row);
+        } else {
+            let eol_next_row = self.rows[row + 1].len();
+            if col > eol_next_row {
+                pos = Position::new(eol_next_row, row + 1);
+            } else {
+                pos = Position::new(col, row + 1);
+            }
+        }
+        pos
+    }
+
+    pub fn move_left(&self, pos: Position) -> Position {
+        let (col, row) = pos.as_tuple();
+        let pos = match col {
+            0 => {
+                if row == 0 {
+                    Position::new(col, row)
+                } else {
+                    let eol = self.rows[col].len();
+                    Position::new(eol, row.saturating_sub(1))
+                }
+            }
+            _ => Position::new(col.saturating_sub(1), row),
+        };
+        pos
+    }
+
+    pub fn move_right(&self, pos: Position) -> Position {
+        let (col, row) = pos.as_tuple();
+        let lower_bound = self.rows.len() - 1;
+        let eol = self.rows[row].len();
+
+        let pos: Position;
+        if col == eol {
+            if row == lower_bound {
+                pos = Position::new(col, row);
+            } else {
+                pos = Position::new(0, row + 1);
+            }
+        } else {
+            pos = Position::new(col + 1, row);
+        }
+        pos
+    }
+
+    pub fn move_up(&self, pos: Position) -> Position {
+        let (col, row) = pos.as_tuple();
+
+        let pos: Position;
+        if row == 0 {
+            pos = Position::new(col, row);
+        } else {
+            let eol_prev_row = self.rows[row - 1].len();
+            if col > eol_prev_row{
+                pos = Position::new(eol_prev_row, row - 1);
+            } else {
+                pos = Position::new(col, row - 1);
+            }
+        }
+        pos
     }
 }
 
@@ -93,7 +146,7 @@ impl GraphemeBuffer for Buffer {
                             "`set_row_content()` is always expected to update the buffer after grapheme is deleted"
                         )
                     });
-                    pos.move_left();
+                    self.move_left(pos);
                     removed_grapheme
                 });
                 (
@@ -104,14 +157,30 @@ impl GraphemeBuffer for Buffer {
         }
     }
 
+    // WIP: needs to implement a range
+    fn delete_graphemes(&mut self) -> (Position, Vec<String>) {
+        unimplemented!()
+    }
+
     // TODO: Will need policies for movement. Switch back to index grapheme eventually
     fn insert_grapheme(&mut self, pos: Position, grapheme: char) -> Position {
         let (col, row) = pos.as_tuple();
         // let index = self.index();
         // self.rows[row].insert(index, grapheme);
         self.rows[row].insert(col, grapheme);
-        let new_pos = pos.move_right();
+        let new_pos = self.move_right(pos);
         new_pos
+    }
+
+    fn insert_graphemes<I: Iterator<Item = char>>(
+        &mut self,
+        mut pos: Position,
+        graphemes: I,
+    ) -> Position {
+        graphemes.into_iter().for_each(|c| {
+            pos = self.insert_grapheme(pos, c);
+        });
+        pos
     }
 
     // TODO: WIP needs to account for rows and columns. Vec of String
@@ -172,8 +241,9 @@ pub enum Actions {
     MoveUp,
 }
 
+/*
 // TODO: replace ColumnState & RowState with newtype
-struct Column(usize);  // newtype pattern 
+struct Column(usize); // newtype pattern
 impl Column {
     // "predicate" special name for function that takes no params and returns bool
     #[inline]
@@ -181,117 +251,7 @@ impl Column {
         self.0 == 0
     }
 }
-
-impl MovementPolicy for Buffer {
-    // Given a position, checks possible moves, returns action type position state. if state is invalid position needs to stay the same
-
-    // 3 action types: Move, Insert, Delete
-    fn check_col_state(&self, pos: Position) -> ColumnState {
-        // Might have to return a result type
-        let (col, row) = pos.as_tuple();
-        let max_length = self.rows[row].len() - 1;
-
-        let state: ColumnState;
-        if col == 0 {
-            state = ColumnState::BeginningOfLine;
-        } else if col == max_length {
-            state = ColumnState::EndOfLine;
-        } else if col > 0 && col < max_length {
-            state = ColumnState::MiddleOfLine
-        } else {
-            // This will need to be an error type
-            state = ColumnState::InvalidPosition;
-        }
-
-        state
-    }
-
-    fn check_row_state(&self, pos: Position) -> RowState {
-        // Might have to return a result type
-        let (_, row) = pos.as_tuple();
-        let max_length = self.rows.len() - 1;
-
-        let state: RowState;
-        if row == 0 {
-            state = RowState::UpperBound;
-        } else if row == max_length {
-            state = RowState::LowerBound;
-        } else {
-            state = RowState::MiddleBound;
-        }
-
-        state
-    }
-
-    // TODO: (MIGHT DELETE) check_lower & check_upper might not be needed. Backspacing BOL will just push content to the end of string. But if length is 0 than it won't matter
-    // Checks if the Row below current Position is populated
-    fn check_lower_row(&self, pos: Position) -> bool {
-        let (_, row) = pos.as_tuple();
-        if self.rows[row + 1].len() > 0 {
-            true
-        } else {
-            false
-        }
-    }
-
-    // Checks if the Row above current Position is populated
-    fn check_upper_row(&self, pos: Position) -> bool {
-        let (_, row) = pos.as_tuple();
-        if self.rows[row - 1].len() > 0 {
-            true
-        } else {
-            false
-        }
-    }
-        
-    // Hardcoding but with sprinkles
-    // TODO: Switch to required_actions
-    fn invalid_actions(&self, col_state: ColumnState, row_state: RowState) -> Vec<Actions> {
-        let mut invalid_actions = vec![];
-        match col_state {
-            ColumnState::BeginningOfLine => match row_state {
-                RowState::LowerBound => {
-                    invalid_actions.push(Actions::MoveDown);
-                    invalid_actions.push(Actions::MoveLeft);
-                }
-                RowState::MiddleBound => {
-                    invalid_actions.push(Actions::MoveLeft);
-                }
-                RowState::UpperBound => {
-                    invalid_actions.push(Actions::DeleteBackward);
-                    invalid_actions.push(Actions::MoveLeft);
-                    invalid_actions.push(Actions::MoveUp);
-                }
-            },
-            ColumnState::EndOfLine => match row_state {
-                RowState::LowerBound => {
-                    invalid_actions.push(Actions::DeleteForward);
-                    invalid_actions.push(Actions::MoveRight);
-                    invalid_actions.push(Actions::MoveDown)
-                }
-                RowState::MiddleBound => {
-                    invalid_actions.push(Actions::MoveRight);
-                }
-                RowState::UpperBound => {
-                    invalid_actions.push(Actions::MoveUp);
-                    invalid_actions.push(Actions::MoveRight);
-                }
-            },
-            ColumnState::MiddleOfLine => match row_state {
-                RowState::LowerBound => invalid_actions.push(Actions::MoveDown),
-                RowState::MiddleBound => (),
-                RowState::UpperBound => {
-                    invalid_actions.push(Actions::MoveUp);
-                }
-            },
-            ColumnState::InvalidPosition => {
-                unimplemented!()
-            }
-        }
-
-        invalid_actions
-    }
-}
+*/
 
 impl View for Buffer {
     // Note: Passing a trait constrains type to types that implement the write Trait

@@ -1,26 +1,6 @@
 use super::*;
 
 #[test]
-#[ignore]
-fn foo() {
-    let pos = Position::default();
-    pos.move_left();
-    let expected_pos = Position::default();
-    assert_eq!(pos, expected_pos);
-}
-
-#[test]
-#[ignore]
-fn bar() {
-    let pos = Position::default();
-    let mut buffer = Buffer::from(vec![String::from("a")]);
-    let pog = buffer.delete_grapheme(Direction::Backward, pos);
-    let expected_buffer = Buffer::from(vec![String::from("a")]);
-    assert_eq!(pos, pog.0);
-    assert_eq!(buffer, expected_buffer);
-}
-
-#[test]
 fn delete_grapheme__backward_delete_an_empty_buffer_does_nothing() {
     // Given
     let pos = Position::default();
