@@ -95,3 +95,22 @@ fn insert_grapheme__adding_a_grapheme_in_a_specific_position_yields_a_grapheme_y
     assert_eq!(res, expected_pos);
     Ok(())
 }
+
+#[test]
+fn insert_grapheme__adding_a_weird_grapheme_in_a_specific_position_yields_a_grapheme_yields_inserted_grapheme_in_correct_location(
+) -> Result<()> {
+    // Given
+    let pos = Position::new(1, 0);
+    let expected_pos = Position::new(2, 0);
+    let grapheme = '悟';
+    let expected_res = Buffer::from(vec![String::from("孫悟空")]);
+    let mut sut = Buffer::from(vec![String::from("孫空")]);
+
+    // When
+    let res = sut.insert_grapheme(pos, grapheme);
+
+    // Then
+    assert_eq!(sut, expected_res);
+    assert_eq!(res, expected_pos);
+    Ok(())
+}

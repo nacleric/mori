@@ -33,12 +33,44 @@ fn policy__move_down_in_col_0_row_0_yields_col_0_row_1() {
 }
 
 #[test]
+fn policy__move_down_wierd_grapheme_in_col_0_row_0_yields_col_0_row_1() {
+    // Given
+    let pos = Position::default();
+    let expected_res = Position::new(0, 1);
+    let expected_buffer = Buffer::from(vec![String::from("孫悟空"), String::from("孫悟空")]);
+    let sut = Buffer::from(vec![String::from("孫悟空"), String::from("孫悟空")]);
+
+    // When
+    let res = sut.move_down(pos);
+
+    // Then
+    assert_eq!(res, expected_res);
+    assert_eq!(sut, expected_buffer);
+}
+
+#[test]
 fn policy__move_down_checks_bottom_row_length_if_col_larger_yield_eol() {
     // Given
     let pos = Position::new(5, 0);
     let expected_res = Position::new(4, 1);
     let expected_buffer = Buffer::from(vec![String::from("hello"), String::from("mori")]);
     let sut = Buffer::from(vec![String::from("hello"), String::from("mori")]);
+
+    // When
+    let res = sut.move_down(pos);
+
+    // Given
+    assert_eq!(res, expected_res);
+    assert_eq!(sut, expected_buffer);
+}
+
+#[test]
+fn policy__move_down_wierd_grapheme_checks_bottom_row_length_if_col_larger_yield_eol() {
+    // Given
+    let pos = Position::new(3, 0);
+    let expected_res = Position::new(2, 1);
+    let expected_buffer = Buffer::from(vec![String::from("孫悟空"), String::from("孫悟")]);
+    let sut = Buffer::from(vec![String::from("孫悟空"), String::from("孫悟")]);
 
     // When
     let res = sut.move_down(pos);

@@ -27,10 +27,3 @@ impl Position {
         self.row
     }
 }
-
-// How default is derived
-// impl Default for Position {
-//     fn default() -> Self {
-//         Self { usize::default(), usize::default() };
-//     }
-// }

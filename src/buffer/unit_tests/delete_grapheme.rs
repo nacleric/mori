@@ -133,6 +133,24 @@ fn delete_grapheme__backward_delete_from_data_model_removes_the_expected_graphem
 }
 
 #[test]
+fn delete_grapheme__backward_delete_weird_grapheme_from_data_model_removes_the_expected_grapheme() {
+    // Given
+    let pos = Position::new(2, 0);
+    let expected_pos = Position::new(1, 0);
+    let expected_buffer = Buffer::from(vec![String::from("孫空")]);
+    let expected_opt_grapheme = Some('悟');
+    let expected_res = (expected_pos, expected_opt_grapheme);
+    let mut sut = Buffer::from(vec![String::from("孫悟空")]);
+
+    // When
+    let res = sut.delete_grapheme(Direction::Backward, pos);
+
+    // Then
+    assert_eq!(res, expected_res);
+    assert_eq!(sut, expected_buffer);
+}
+
+#[test]
 fn delete_grapheme__forward_delete_from_data_model_removes_the_expected_grapheme() {
     // Given
     let pos = Position::new(5, 0);

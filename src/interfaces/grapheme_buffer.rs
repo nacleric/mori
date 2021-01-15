@@ -1,6 +1,6 @@
 use crate::{buffer::direction::Direction, position::Position, Result};
-
-pub trait GraphemeBuffer {
+use crate::interfaces::Bufferable;
+pub trait GraphemeBuffer: Bufferable {
     type Error: std::error::Error;
 
     fn content(&self) -> Vec<String>;
@@ -12,7 +12,7 @@ pub trait GraphemeBuffer {
         pos: Position,
         graphemes: I,
     ) -> Position;
-    fn index(&self) -> usize;
+    fn index(&self, pos: Position) -> usize;
     fn row_content(&self, pos: Position) -> &[u8];
     fn set_row_content(&mut self, pos: Position, data: String) -> Result<&mut Self, Self::Error>;
 }

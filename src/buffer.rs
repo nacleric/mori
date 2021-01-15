@@ -16,6 +16,10 @@ pub struct Buffer {
     rows: Vec<String>,
 }
 
+impl Bufferable for Buffer {
+
+}
+
 impl Buffer {
     pub fn new() -> Self {
         Self::default()
@@ -96,7 +100,7 @@ impl Buffer {
             pos = Position::new(col, row);
         } else {
             let eol_prev_row = self.rows[row - 1].len();
-            if col > eol_prev_row{
+            if col > eol_prev_row {
                 pos = Position::new(eol_prev_row, row - 1);
             } else {
                 pos = Position::new(col, row - 1);
@@ -183,19 +187,26 @@ impl GraphemeBuffer for Buffer {
         pos
     }
 
-    // TODO: WIP needs to account for rows and columns. Vec of String
-    // Might not need information of what row it belongs to
-    fn index(&self) -> usize {
-        // match self.pos().col() {
-        //     0 => 0,
-        //     pos => self
-        //         .data[self.pos().row()] // .data is for Row Buffer? Assumes Vector
-        //         .grapheme_indices(true)
-        //         .nth(self.pos().col() - 1)
-        //         .expect("Invalid position") // usize is index &str utf8 representation of the char
-        //         .0,
-        // }
-        unimplemented!();
+    fn index(&self, pos: Position) -> usize {
+        let (col, row) = pos.as_tuple();
+        let index = match col {
+            0 => 0,
+            col => {
+                dbg!(
+                    self.rows[row]
+                        .grapheme_indices(true)
+                        .nth(col)
+                        .expect("invalid position")
+                        .1
+                );
+                self.rows[row]
+                    .grapheme_indices(true)
+                    .nth(col)
+                    .expect("invalid position")
+                    .0
+            }
+        };
+        index
     }
 
     fn row_content(&self, pos: Position) -> &[u8] {
@@ -226,19 +237,6 @@ impl From<Vec<String>> for Buffer {
         buf.rows = data;
         buf
     }
-}
-
-// TODO: move this to top of the file but this will probably be redone
-pub enum Actions {
-    AddRow,
-    DeleteBackward,
-    DeleteForward,
-    DeleteRow,
-    Insert,
-    MoveDown,
-    MoveLeft,
-    MoveRight,
-    MoveUp,
 }
 
 /*
