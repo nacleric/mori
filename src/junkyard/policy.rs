@@ -4,10 +4,10 @@ use crate::position_buffer::PositionBuffer;
 #[test]
 fn policy__move_down_in_empty_buffer_yields_default_position() {
     // Given
-    let pos = Position::default();
-    let expected_res = Position::default();
-    let expected_buffer = Buffer::default();
-    let buf = Buffer::default();
+    let pos = CursorPosition::default();
+    let expected_res = CursorPosition::default();
+    let expected_buffer = Utf8Buffer::default();
+    let buf = Utf8Buffer::default();
     let sut = PositionBuffer::new(buf, pos);
 
     // When
@@ -180,7 +180,7 @@ fn policy_move_up_in_empty_buffer_yields_default_position() {
 }
 
 #[test]
-fn policy_move_up_in_col_0_row_1_yields_col_0_row_0() {    
+fn policy_move_up_in_col_0_row_1_yields_col_0_row_0() {
     // Given
     let pos = Position::new(0, 1);
     let expected_res = Position::new(0, 0);

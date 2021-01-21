@@ -5,7 +5,7 @@ use crate::interfaces::View;
 fn empty_buffer_displays_nothing() {
     // Given
     let expected_res = [];
-    let buf = Buffer::new();
+    let buf = Utf8Buffer::new();
     let mut stdout_mock = Vec::<u8>::new();
 
     // When
@@ -20,8 +20,8 @@ fn empty_buffer_displays_nothing() {
 fn show__buffer_displays_a_single_grapheme() {
     // Given
     let expected_res = String::from("a").into_bytes();
-    let mut buf = Buffer::new();
-    let pos = Position::default();
+    let mut buf = Utf8Buffer::new();
+    let pos = CursorPosition::default();
     buf.insert_grapheme(pos, 'a');
     let mut stdout_mock = Vec::<u8>::new();
 
@@ -37,8 +37,8 @@ fn show__buffer_displays_a_single_grapheme() {
 fn show__buffer_displays_multiple_graphemes() {
     // Given
     let sentence = String::from("hello world");
-    let mut buf = Buffer::new();
-    let pos = Position::default();
+    let mut buf = Utf8Buffer::new();
+    let pos = CursorPosition::default();
     buf.insert_graphemes(pos, sentence.chars());
     let expected_res = sentence.into_bytes(); // self -> vec<u8> into_bytes() consumes sentence
 

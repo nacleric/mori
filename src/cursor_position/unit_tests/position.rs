@@ -1,4 +1,4 @@
-use super::*;
+use crate::cursor_position::unit_tests::*;
 
 #[test]
 fn default__returns_col_0_row_0() {
@@ -6,7 +6,7 @@ fn default__returns_col_0_row_0() {
     let expected_col = 0;
     let expected_row = 0;
     let expected_tuple = (0, 0);
-    let sut = Position::default;
+    let sut = CursorPosition::default;
 
     // When
     let res = sut();
@@ -23,7 +23,7 @@ fn new__returns_expected_col_row() {
     let expected_col = 4;
     let expected_row = 2;
     let expected_tuple = (4, 2);
-    let sut = Position::new;
+    let sut = CursorPosition::new;
 
     // When
     let res = sut(expected_col, expected_row);

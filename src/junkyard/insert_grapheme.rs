@@ -6,11 +6,11 @@ use super::*;
 fn insert_grapheme__adding_a_grapheme_to_an_empty_data_model_yields_a_model_containing_only_the_grapheme(
 ) -> Result<()> {
     // Given
-    let pos = Position::default(); // Sets position to 0, 0
-    let expected_pos = Position::new(1, 0);
+    let pos = CursorPosition::default(); // Sets position to 0, 0
+    let expected_pos = CursorPosition::new(1, 0);
     let grapheme = 'a';
-    let expected_res = Buffer::from(vec![grapheme.to_string()]);
-    let mut sut = Buffer::new();
+    let expected_res = Utf8Buffer::from(vec![grapheme.to_string()]);
+    let mut sut = Utf8Buffer::new();
 
     // When
     let res = sut.insert_grapheme(pos, grapheme);
@@ -25,11 +25,11 @@ fn insert_grapheme__adding_a_grapheme_to_an_empty_data_model_yields_a_model_cont
 fn insert_grapheme__adding_a_weird_grapheme_to_an_empty_data_model_yields_a_model_containing_only_the_grapheme(
 ) -> Result<()> {
     // Given
-    let pos = Position::default();
-    let expected_pos = Position::new(1, 0);
+    let pos = CursorPosition::default();
+    let expected_pos = CursorPosition::new(1, 0);
     let grapheme = '你';
-    let expected_res = Buffer::from(vec![grapheme.to_string()]);
-    let mut sut = Buffer::new();
+    let expected_res = Utf8Buffer::from(vec![grapheme.to_string()]);
+    let mut sut = Utf8Buffer::new();
 
     // When
     let res = sut.insert_grapheme(pos, grapheme);
@@ -45,10 +45,10 @@ fn insert_grapheme__adding_an_escape_character_grapheme_to_an_empty_data_model_y
 ) -> Result<()> {
     // Given
     let grapheme = '\n';
-    let expected_res = Buffer::from(vec![grapheme.to_string()]);
-    let pos = Position::default();
-    let expected_pos = Position::new(1, 0);
-    let mut sut = Buffer::new();
+    let expected_res = Utf8Buffer::from(vec![grapheme.to_string()]);
+    let pos = CursorPosition::default();
+    let expected_pos = CursorPosition::new(1, 0);
+    let mut sut = Utf8Buffer::new();
 
     // When
     let res = sut.insert_grapheme(pos, grapheme); // maybe like this
@@ -63,10 +63,10 @@ fn insert_grapheme__adding_an_escape_character_grapheme_to_an_empty_data_model_y
 fn insert_grapheme__adding_a_tab_to_an_empty_data_model_yields_a_tab() -> Result<()> {
     // Given
     let grapheme = '\t';
-    let expected_res = Buffer::from(vec![grapheme.to_string()]);
-    let pos = Position::default();
-    let expected_pos = Position::new(1, 0);
-    let mut sut = Buffer::new();
+    let expected_res = Utf8Buffer::from(vec![grapheme.to_string()]);
+    let pos = CursorPosition::default();
+    let expected_pos = CursorPosition::new(1, 0);
+    let mut sut = Utf8Buffer::new();
 
     // When
     let res = sut.insert_grapheme(pos, grapheme);
@@ -81,11 +81,11 @@ fn insert_grapheme__adding_a_tab_to_an_empty_data_model_yields_a_tab() -> Result
 fn insert_grapheme__adding_a_grapheme_in_a_specific_position_yields_a_grapheme_yields_inserted_grapheme_in_correct_location(
 ) -> Result<()> {
     // Given
-    let pos = Position::new(4, 0);
-    let expected_pos = Position::new(5, 0);
+    let pos = CursorPosition::new(4, 0);
+    let expected_pos = CursorPosition::new(5, 0);
     let grapheme = 'n';
-    let expected_res = Buffer::from(vec![String::from("green sleeping mask")]);
-    let mut sut = Buffer::from(vec![String::from("gree sleeping mask")]);
+    let expected_res = Utf8Buffer::from(vec![String::from("green sleeping mask")]);
+    let mut sut = Utf8Buffer::from(vec![String::from("gree sleeping mask")]);
 
     // When
     let res = sut.insert_grapheme(pos, grapheme);
@@ -100,11 +100,11 @@ fn insert_grapheme__adding_a_grapheme_in_a_specific_position_yields_a_grapheme_y
 fn insert_grapheme__adding_a_weird_grapheme_in_a_specific_position_yields_a_grapheme_yields_inserted_grapheme_in_correct_location(
 ) -> Result<()> {
     // Given
-    let pos = Position::new(1, 0);
-    let expected_pos = Position::new(2, 0);
+    let pos = CursorPosition::new(1, 0);
+    let expected_pos = CursorPosition::new(2, 0);
     let grapheme = '悟';
-    let expected_res = Buffer::from(vec![String::from("孫悟空")]);
-    let mut sut = Buffer::from(vec![String::from("孫空")]);
+    let expected_res = Utf8Buffer::from(vec![String::from("孫悟空")]);
+    let mut sut = Utf8Buffer::from(vec![String::from("孫空")]);
 
     // When
     let res = sut.insert_grapheme(pos, grapheme);

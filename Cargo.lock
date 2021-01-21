@@ -75,11 +75,18 @@ checksum = "89203f3fba0a3795506acaad8ebce3c80c0af93f994d5a1d7a0b1eeb23271929"
 name = "mori"
 version = "0.1.0"
 dependencies = [
+ "non-empty-vec",
  "structopt",
  "termion",
  "thiserror",
  "unicode-segmentation",
 ]
+
+[[package]]
+name = "non-empty-vec"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f9bf1d9485a47ae664e95db4cdbee21303f32f40fdd49048d81c36f7f780ffe3"
 
 [[package]]
 name = "numtoa"

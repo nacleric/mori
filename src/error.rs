@@ -6,8 +6,8 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 pub enum Error {
     #[error("Error: failed to insert grapheme {}", 0)]
     FailedToInsertgrapheme(char),
-    #[error("Error: Invalid `Position` specified {}", 0)]
-    InvalidPosition(crate::Position),
+    // #[error("Error: Invalid `Position` specified {}", 0)]
+    // InvalidPosition(crate::CursorPosition),
     #[error("IoError: {}", 0)]
     Foo(String),
 }

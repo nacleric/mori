@@ -2,12 +2,12 @@
 mod unit_tests;
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
-pub struct Position {
+pub struct CursorPosition {
     col: usize,
     row: usize,
 }
 
-impl Position {
+impl CursorPosition {
     // type_constructor
     pub fn new(col: usize, row: usize) -> Self {
         Self { col, row }

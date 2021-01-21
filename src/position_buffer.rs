@@ -2,49 +2,37 @@
 mod unit_tests;
 
 use crate::{
-    buffer::{self, Buffer},
-    interfaces::{Bufferable, Positionable},
-    position::Position,
+    cursor_position::CursorPosition,
+    interfaces::{Buffer, Position},
 };
 
 #[derive(Debug, Eq, PartialEq)]
-pub struct PositionBuffer<B: Bufferable, P: Positionable> {
+pub struct PositionBuffer<B: Buffer, P: Position> {
     buffer: B,
     position: P,
 }
 
 impl<B, P> PositionBuffer<B, P>
 where
-    B: Bufferable,
-    P: Positionable,
+    B: Buffer,
+    P: Position + Copy,
 {
     pub fn new(buffer: B, position: P) -> Self {
-        PositionBuffer {
-            buffer: buffer,
-            position: position,
-        }
-    }
-
-    fn buf(self, buffer: B) -> B {
-        self.buffer
-    }
-
-    fn pos(self, position: P) -> P {
-        self.position
+        Self { buffer, position }
     }
 }
 
-impl<B: Bufferable, P: Positionable> Positionable for PositionBuffer<B, P> {
-    fn move_down(&self, pos: Position) -> Position {
+impl<B: Buffer, P: Position> Position for PositionBuffer<B, P> {
+    fn move_down(&self, pos: CursorPosition) -> CursorPosition {
         unimplemented!()
     }
-    fn move_left(&self, pos: Position) -> Position {
+    fn move_left(&self, pos: CursorPosition) -> CursorPosition {
         unimplemented!()
     }
-    fn move_right(&self, pos: Position) -> Position {
+    fn move_right(&self, pos: CursorPosition) -> CursorPosition {
         unimplemented!()
     }
-    fn move_up(&self, pos: Position) -> Position {
+    fn move_up(&self, pos: CursorPosition) -> CursorPosition {
         unimplemented!()
     }
 }
