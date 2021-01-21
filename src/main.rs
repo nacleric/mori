@@ -1,17 +1,20 @@
 #![allow(dead_code)]
-pub mod buffer;
 mod cli_args;
 mod error;
-pub mod interfaces;
 mod position;
+mod position_buffer;
 
 use cli_args::CliArgs;
 // use std::io;
 use crate::buffer::*;
 use structopt::StructOpt;
+
+pub mod buffer;
+pub mod interfaces;
 pub use {
     error::{Error, Result},
     position::Position,
+    position_buffer::PositionBuffer,
 };
 
 // TODO: Read filepath and insert row_content into buffer

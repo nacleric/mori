@@ -1,7 +1,5 @@
 #[cfg(test)]
 mod unit_tests;
-use crate::error::{Error, Result};
-
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct Position {

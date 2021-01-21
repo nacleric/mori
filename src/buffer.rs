@@ -1,12 +1,14 @@
 pub mod direction;
 #[cfg(test)]
 mod unit_tests;
+
 use crate::{
     error::{Error, Result},
+    interfaces::Bufferable,
     interfaces::GraphemeBuffer,
+    interfaces::View,
     position::Position,
 };
-use crate::{interfaces::View, position};
 use direction::Direction;
 use std::io::Write;
 use unicode_segmentation::UnicodeSegmentation;
@@ -16,16 +18,15 @@ pub struct Buffer {
     rows: Vec<String>,
 }
 
-impl Bufferable for Buffer {
-
-}
-
 impl Buffer {
     pub fn new() -> Self {
         Self::default()
     }
 
-    pub fn insert_row(&mut self, pos: Position) -> Position {
+}
+
+impl Bufferable for Buffer {
+    fn insert_row(&mut self, pos: Position) -> Position {
         // Enter Key-event: Add a new empty buffer when pressing enter
         // (Policy) If enter is pressed mid-string, data to the right of cursor is put into new line
         let (_, row) = pos.as_tuple();
@@ -34,80 +35,12 @@ impl Buffer {
         new_pos
     }
 
-    pub fn delete_row() {
+    fn delete_row(&mut self, pos: Position) -> Position {
         // Backspace Key-event: Remove buffer if index[0] get's deleted
         // (Policy) If elements still exist in buffer, move data to the row above it
         unimplemented!()
     }
 
-    pub fn move_down(&self, pos: Position) -> Position {
-        let (col, row) = pos.as_tuple();
-        let lower_bound = self.rows.len() - 1;
-
-        let pos: Position;
-        if row == lower_bound {
-            pos = Position::new(col, row);
-        } else {
-            let eol_next_row = self.rows[row + 1].len();
-            if col > eol_next_row {
-                pos = Position::new(eol_next_row, row + 1);
-            } else {
-                pos = Position::new(col, row + 1);
-            }
-        }
-        pos
-    }
-
-    pub fn move_left(&self, pos: Position) -> Position {
-        let (col, row) = pos.as_tuple();
-        let pos = match col {
-            0 => {
-                if row == 0 {
-                    Position::new(col, row)
-                } else {
-                    let eol = self.rows[col].len();
-                    Position::new(eol, row.saturating_sub(1))
-                }
-            }
-            _ => Position::new(col.saturating_sub(1), row),
-        };
-        pos
-    }
-
-    pub fn move_right(&self, pos: Position) -> Position {
-        let (col, row) = pos.as_tuple();
-        let lower_bound = self.rows.len() - 1;
-        let eol = self.rows[row].len();
-
-        let pos: Position;
-        if col == eol {
-            if row == lower_bound {
-                pos = Position::new(col, row);
-            } else {
-                pos = Position::new(0, row + 1);
-            }
-        } else {
-            pos = Position::new(col + 1, row);
-        }
-        pos
-    }
-
-    pub fn move_up(&self, pos: Position) -> Position {
-        let (col, row) = pos.as_tuple();
-
-        let pos: Position;
-        if row == 0 {
-            pos = Position::new(col, row);
-        } else {
-            let eol_prev_row = self.rows[row - 1].len();
-            if col > eol_prev_row {
-                pos = Position::new(eol_prev_row, row - 1);
-            } else {
-                pos = Position::new(col, row - 1);
-            }
-        }
-        pos
-    }
 }
 
 impl GraphemeBuffer for Buffer {
@@ -117,8 +50,6 @@ impl GraphemeBuffer for Buffer {
         self.rows.clone()
     }
 
-    // Semantically guarantees something gets deleted but if theres nothing to delete than innacurate name
-    // TODO: add Position as an argument
     fn delete_grapheme(&mut self, direction: Direction, pos: Position) -> (Position, Option<char>) {
         let (col, row) = pos.as_tuple();
         match direction {
