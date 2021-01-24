@@ -3,8 +3,8 @@ pub mod direction;
 mod unit_tests;
 
 use crate::{consts::*, interfaces::Buffer};
-use non_empty_vec::NonEmpty;
-
+use non_empty_vec::NonEmpty; 
+   
 #[derive(Debug, Eq, PartialEq)]
 pub struct Utf8Buffer {
     rows: NonEmpty<<Self as Buffer>::Row>,
@@ -20,7 +20,17 @@ impl Buffer for Utf8Buffer {
     type Row = String;
 
     fn delete_row(&mut self, row_index: usize) -> Option<Self::Row> {
-        unimplemented!()
+        let recorded_string = self.rows[row_index].clone();
+        let new_rows = {
+            let mut tmp_vec = self.rows.to_vec();
+            tmp_vec.remove(row_index);
+            tmp_vec
+        };
+        self.rows = NonEmpty::new(new_rows)
+            .unwrap_or_else(|| unreachable!(ERR_INTERNAL_NON_EMPTY_VEC_REQUIRED));
+
+        Some(recorded_string)
+        
     }
 
     fn edit_row(&mut self, row_index: usize) -> Option<&mut Self::Row> {
@@ -49,5 +59,14 @@ impl Default for Utf8Buffer {
             rows: NonEmpty::new(vec![String::new()])
                 .unwrap_or_else(|| unreachable!(ERR_INTERNAL_NON_EMPTY_VEC_REQUIRED)),
         }
+    }
+}
+
+impl From<Vec<String>> for Utf8Buffer {
+    fn from(data: Vec<String>) -> Self {
+        let mut buf = Utf8Buffer::new();
+        buf.rows = NonEmpty::new(data)
+            .unwrap_or_else(|| unreachable!(ERR_INTERNAL_NON_EMPTY_VEC_REQUIRED));
+        buf
     }
 }
