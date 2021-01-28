@@ -1,8 +1,12 @@
-pub mod direction;
 #[cfg(test)]
 mod unit_tests;
 
-use crate::{consts::*, interfaces::Buffer};
+pub mod direction;
+
+use crate::{
+    consts::*,
+    interfaces::{Buffer, GraphemeBuffer}
+};
 use non_empty_vec::NonEmpty; 
    
 #[derive(Debug, Eq, PartialEq)]
@@ -30,11 +34,10 @@ impl Buffer for Utf8Buffer {
             .unwrap_or_else(|| unreachable!(ERR_INTERNAL_NON_EMPTY_VEC_REQUIRED));
 
         Some(recorded_string)
-        
     }
 
     fn edit_row(&mut self, row_index: usize) -> Option<&mut Self::Row> {
-        unimplemented!()
+        Some(&mut self.rows[row_index])
     }
 
     fn insert_row(&mut self, row_index: usize) -> &mut Self {
@@ -50,6 +53,14 @@ impl Buffer for Utf8Buffer {
 
     fn row_count(&self) -> usize {
         self.rows.len().into()
+    }
+}
+
+impl GraphemeBuffer for Utf8Buffer {
+    type Column = usize;
+
+    fn insert_grapheme(&mut self, col_index: usize, grapheme: char) -> Option<Self::Column> {
+        Some(0)
     }
 }
 
