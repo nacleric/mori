@@ -1,9 +1,9 @@
 #![allow(dead_code)]
 mod cli_args;
-// mod cursor_position;
+mod cursor_position;
 mod consts;
 mod error;
-// mod position_buffer;
+mod position_buffer;
 mod utf8_buffer;
 
 use cli_args::CliArgs;
@@ -15,7 +15,6 @@ pub mod interfaces;
 pub use error::{Error, Result};
 
 // TODO: Read filepath and insert row_content into buffer
-// Step 2: decouple it in a way that makes sense. Maybe put it into a folder called views
 fn main() -> Result<()> {
     let filepath = CliArgs::from_args();
     // TODO: remove underscores eventually

@@ -1,12 +1,11 @@
-pub mod direction;
 #[cfg(test)]
 mod unit_tests;
 
+pub mod direction;
+
 use crate::interfaces::Buffer;
 use non_empty_vec::NonEmpty;
-// use direction::Direction;
 // use std::io::Write;
-// use unicode_segmentation::UnicodeSegmentation;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Utf8Buffer {

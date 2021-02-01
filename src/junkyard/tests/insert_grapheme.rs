@@ -1,7 +1,5 @@
 use super::*;
 
-// TODO: this
-// String not inserted into buffer
 #[test]
 fn insert_grapheme__adding_a_grapheme_to_an_empty_data_model_yields_a_model_containing_only_the_grapheme(
 ) -> Result<()> {

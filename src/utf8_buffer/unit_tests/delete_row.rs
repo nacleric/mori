@@ -3,7 +3,7 @@ use super::*;
 #[test]
 fn deletes_empty_string_from_2nd_row_yields_deleted_string() {
     // Given
-    let expected_row_count = 1; 
+    let expected_row_count = 1;
     let expected_res = String::from("");
     let mut sut = Utf8Buffer::new();
     sut.append_row();
@@ -19,7 +19,7 @@ fn deletes_empty_string_from_2nd_row_yields_deleted_string() {
 #[test]
 fn deletes_populated_string_from_2nd_row_yields_deleted_string() {
     // Given
-    let expected_row_count = 1; 
+    let expected_row_count = 1;
     let expected_res = String::from("hello world");
     let mut sut = Utf8Buffer::from(vec![String::from(""), String::from("hello world")]);
 
@@ -34,7 +34,7 @@ fn deletes_populated_string_from_2nd_row_yields_deleted_string() {
 #[test]
 fn deletes_populated_grapheme_cluster_from_2nd_row_yields_deleted_string() {
     // Given
-    let expected_row_count = 1; 
+    let expected_row_count = 1;
     let expected_res = String::from("孫悟空");
     let mut sut = Utf8Buffer::from(vec![String::from(""), String::from("孫悟空")]);
 

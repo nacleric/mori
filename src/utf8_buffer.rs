@@ -3,12 +3,9 @@ mod unit_tests;
 
 pub mod direction;
 
-use crate::{
-    consts::*,
-    interfaces::{Buffer, GraphemeBuffer}
-};
-use non_empty_vec::NonEmpty; 
-   
+use crate::{consts::*, interfaces::Buffer};
+use non_empty_vec::NonEmpty;
+
 #[derive(Debug, Eq, PartialEq)]
 pub struct Utf8Buffer {
     rows: NonEmpty<<Self as Buffer>::Row>,
@@ -53,14 +50,6 @@ impl Buffer for Utf8Buffer {
 
     fn row_count(&self) -> usize {
         self.rows.len().into()
-    }
-}
-
-impl GraphemeBuffer for Utf8Buffer {
-    type Column = usize;
-
-    fn insert_grapheme(&mut self, col_index: usize, grapheme: char) -> Option<Self::Column> {
-        Some(0)
     }
 }
 

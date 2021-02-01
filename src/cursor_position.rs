@@ -8,7 +8,6 @@ pub struct CursorPosition {
 }
 
 impl CursorPosition {
-    // type_constructor
     pub fn new(col: usize, row: usize) -> Self {
         Self { col, row }
     }
