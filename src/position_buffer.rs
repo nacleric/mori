@@ -3,7 +3,6 @@ mod unit_tests;
 
 use crate::{
     cursor_position::CursorPosition,
-    utf8_buffer::Utf8Buffer,
     interfaces::{Buffer, Position},
 };
 
@@ -42,21 +41,23 @@ impl<B: Buffer> Position for PositionBuffer<B> {
         self
     }
 
-    fn move_left(&self)  {
+    fn move_left(&self) {
         unimplemented!()
     }
 
-    fn move_right(&self)  {
+    fn move_right(&self) {
         unimplemented!()
     }
 
-    fn move_up(&self)  {
+    fn move_up(&self) {
         unimplemented!()
     }
 }
 
 impl<B> Default for PositionBuffer<B>
-where B: Buffer + Default {
+where
+    B: Buffer + Default,
+{
     fn default() -> Self {
         Self {
             buffer: B::default(),

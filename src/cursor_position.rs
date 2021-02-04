@@ -1,5 +1,3 @@
-use crate::interfaces::Position;
-
 #[cfg(test)]
 mod unit_tests;
 

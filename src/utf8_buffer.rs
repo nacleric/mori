@@ -8,7 +8,7 @@ use non_empty_vec::NonEmpty;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Utf8Buffer {
-    pub rows: NonEmpty<<Self as Buffer>::Row>,
+    rows: NonEmpty<<Self as Buffer>::Row>,
 }
 
 impl Utf8Buffer {

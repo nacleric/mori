@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 mod cli_args;
-mod cursor_position;
 mod consts;
+mod cursor_position;
 mod error;
 mod position_buffer;
 mod utf8_buffer;

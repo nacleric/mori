@@ -1,9 +1,4 @@
-use super::*;
-use crate::{
-    cursor_position::CursorPosition,
-    position_buffer::PositionBuffer,
-    utf8_buffer::Utf8Buffer,
-};
+use crate::cursor_position::CursorPosition;
 
 #[test]
 fn default__returns_col_0_row_0() {
