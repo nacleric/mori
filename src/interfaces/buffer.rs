@@ -6,6 +6,7 @@ pub trait Buffer {
         self
     }
 
+    fn col_count(&self, row_index: usize) -> usize;
     fn delete_row(&mut self, row_index: usize) -> Option<Self::Row>;
     fn edit_row(&mut self, row_index: usize) -> Option<&mut Self::Row>;
     fn insert_row(&mut self, row_index: usize) -> &mut Self;

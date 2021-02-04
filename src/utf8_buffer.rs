@@ -8,7 +8,7 @@ use non_empty_vec::NonEmpty;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Utf8Buffer {
-    rows: NonEmpty<<Self as Buffer>::Row>,
+    pub rows: NonEmpty<<Self as Buffer>::Row>,
 }
 
 impl Utf8Buffer {
@@ -19,6 +19,10 @@ impl Utf8Buffer {
 
 impl Buffer for Utf8Buffer {
     type Row = String;
+
+    fn col_count(&self, row_index: usize) -> usize {
+        self.rows[row_index].len()
+    }
 
     fn delete_row(&mut self, row_index: usize) -> Option<Self::Row> {
         let recorded_string = self.rows[row_index].clone();
