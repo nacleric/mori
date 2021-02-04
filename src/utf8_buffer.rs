@@ -31,8 +31,9 @@ impl Buffer for Utf8Buffer {
             tmp_vec.remove(row_index);
             tmp_vec
         };
-        self.rows = NonEmpty::new(new_rows)
-            .unwrap_or_else(|| unreachable!(ERR_INTERNAL_NON_EMPTY_VEC_REQUIRED));
+        self.rows = NonEmpty::new(new_rows).unwrap_or_else(|| {
+            unreachable!(ERR_INTERNAL_NON_EMPTY_VEC_REQUIRED)
+        });
 
         Some(recorded_string)
     }
@@ -47,8 +48,9 @@ impl Buffer for Utf8Buffer {
             tmp_vec.insert(row_index, String::new());
             tmp_vec
         };
-        self.rows = NonEmpty::new(new_rows)
-            .unwrap_or_else(|| unreachable!(ERR_INTERNAL_NON_EMPTY_VEC_REQUIRED));
+        self.rows = NonEmpty::new(new_rows).unwrap_or_else(|| {
+            unreachable!(ERR_INTERNAL_NON_EMPTY_VEC_REQUIRED)
+        });
         self
     }
 
@@ -60,8 +62,9 @@ impl Buffer for Utf8Buffer {
 impl Default for Utf8Buffer {
     fn default() -> Self {
         Self {
-            rows: NonEmpty::new(vec![String::new()])
-                .unwrap_or_else(|| unreachable!(ERR_INTERNAL_NON_EMPTY_VEC_REQUIRED)),
+            rows: NonEmpty::new(vec![String::new()]).unwrap_or_else(|| {
+                unreachable!(ERR_INTERNAL_NON_EMPTY_VEC_REQUIRED)
+            }),
         }
     }
 }
@@ -69,8 +72,9 @@ impl Default for Utf8Buffer {
 impl From<Vec<String>> for Utf8Buffer {
     fn from(data: Vec<String>) -> Self {
         let mut buf = Utf8Buffer::new();
-        buf.rows = NonEmpty::new(data)
-            .unwrap_or_else(|| unreachable!(ERR_INTERNAL_NON_EMPTY_VEC_REQUIRED));
+        buf.rows = NonEmpty::new(data).unwrap_or_else(|| {
+            unreachable!(ERR_INTERNAL_NON_EMPTY_VEC_REQUIRED)
+        });
         buf
     }
 }

@@ -33,32 +33,3 @@ fn new__returns_expected_col_row() {
     assert_eq!(res.row, expected_row);
     assert_eq!(res.as_tuple(), expected_tuple);
 }
-
-/*
-// TODO: this
-#[test]
-fn move_down_in_given_position_yields_row_plus_1() {
-    // Given
-    let expected_res = CursorPosition::new(0, 1);
-    let sut = CursorPosition::default();
-
-    // When
-    let res = sut.move_down(sut);
-
-    // Then
-    assert_eq!(res, expected_res);
-}
-
-#[test]
-fn move_left_in_given_position_yields_col_minus_1() {
-    // Given
-    let expected_res = CursorPosition::new(0, 0);
-    let sut = CursorPosition::default();
-
-    // When
-    let res = sut.move_down(sut);
-
-    // Then
-    assert_eq!(res, expected_res);
-}
-*/

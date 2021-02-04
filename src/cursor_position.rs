@@ -24,31 +24,3 @@ impl CursorPosition {
         self.row
     }
 }
-
-/*
-impl Position for CursorPosition {
-    fn move_down(&self, pos: CursorPosition) -> CursorPosition {
-        let (col, row) = pos.as_tuple();
-        let pos = CursorPosition::new(col, row + 1);
-        pos
-    }
-
-    fn move_left(&self, pos: CursorPosition) -> CursorPosition {
-        let (col, row) = pos.as_tuple();
-        let pos = CursorPosition::new(col - 1, row);
-        pos
-    }
-
-    fn move_right(&self, pos: CursorPosition) -> CursorPosition {
-        let (col, row) = pos.as_tuple();
-        let pos = CursorPosition::new(col + 1, row);
-        pos
-    }
-
-    fn move_up(&self, pos: CursorPosition) -> CursorPosition {
-        let (col, row) = pos.as_tuple();
-        let pos = CursorPosition::new(col, row - 1);
-        pos
-    }
-}
-*/

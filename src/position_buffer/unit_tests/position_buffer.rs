@@ -7,7 +7,8 @@ fn new__returns_position_buffer() {
     // Given
     let buf = Utf8Buffer::new();
     let pos = CursorPosition::default();
-    let expected_res = PositionBuffer::new(Utf8Buffer::new(), CursorPosition::default());
+    let expected_res =
+        PositionBuffer::new(Utf8Buffer::new(), CursorPosition::default());
     let sut = PositionBuffer::new;
 
     // When
@@ -20,8 +21,8 @@ fn new__returns_position_buffer() {
 #[test]
 fn move_down_in_empty_buffer_yields_default_position() {
     // Given
-    let expected_res: PositionBuffer<Utf8Buffer> = PositionBuffer::default();
-    let sut: PositionBuffer<Utf8Buffer> = PositionBuffer::default();
+    let expected_res = PositionBuffer::default();
+    let sut = PositionBuffer::default();
 
     // When
     let mut res = sut;
