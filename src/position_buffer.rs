@@ -36,16 +36,58 @@ impl PositionBuffer {
         self
     }
 
-    pub fn move_left(&self) {
-        unimplemented!()
+    pub fn move_left(&mut self) -> &mut Self {
+        let (col, row) = self.position.as_tuple();
+        let eol = self.buffer.col_count(row);
+
+        let new_pos: CursorPosition;
+        if col == 0 {
+            if row == 0 {
+                new_pos = CursorPosition::new(col, row);
+            } else {
+                new_pos = CursorPosition::new(eol, row - 1);
+            }
+        } else {
+            new_pos = CursorPosition::new(col - 1, row);
+        };
+        self.position = new_pos;
+        self
     }
 
-    pub fn move_right(&self) {
-        unimplemented!()
+    pub fn move_right(&mut self) -> &mut Self {
+        let (col, row) = self.position.as_tuple();
+        let max_row = self.buffer.row_count() - 1;
+        let eol = self.buffer.col_count(row);
+
+        let new_pos: CursorPosition;
+        if col == eol {
+            if row == max_row {
+                new_pos = CursorPosition::new(col, row);
+            } else {
+                new_pos = CursorPosition::new(0, row + 1);
+            }
+        } else {
+            new_pos = CursorPosition::new(col + 1, row);
+        };
+        self.position = new_pos;
+        self
     }
 
-    pub fn move_up(&self) {
-        unimplemented!()
+    pub fn move_up(&mut self) -> &mut Self {
+        let (col, row) = self.position.as_tuple();
+
+        let new_pos: CursorPosition;
+        if row == 0 {
+            new_pos = self.position;
+        } else {
+            let new_row = row - 1;
+            new_pos = CursorPosition::new(
+                min(self.buffer.col_count(new_row), col),
+                new_row,
+            );
+        }
+        self.position = new_pos;
+        self
     }
 }
 
