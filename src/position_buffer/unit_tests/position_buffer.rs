@@ -1,6 +1,6 @@
 use super::*;
-use crate::cursor_position::CursorPosition;
-use crate::utf8_buffer::Utf8Buffer;
+use crate::{cursor_position::CursorPosition, utf8_buffer::Utf8Buffer};
+
 
 #[test]
 fn new__returns_position_buffer() {
