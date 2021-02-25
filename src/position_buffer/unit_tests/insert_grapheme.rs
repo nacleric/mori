@@ -6,8 +6,10 @@ fn insert_grapheme_in_empty_buffer() {
     // Given
     let grapheme = 'h';
     let expected_pos = CursorPosition::new(1, 0);
-    let expected_res =
-        PositionBuffer::new(Utf8Buffer::from(vec![grapheme.to_string()]), expected_pos);
+    let expected_res = PositionBuffer::new(
+        Utf8Buffer::from(vec![grapheme.to_string()]),
+        expected_pos,
+    );
     let sut = PositionBuffer::default();
 
     // When
@@ -23,8 +25,10 @@ fn insert_grapheme_in_eol() {
     // Given
     let grapheme = 'i';
     let expected_pos = CursorPosition::new(2, 0);
-    let expected_res =
-        PositionBuffer::new(Utf8Buffer::from(vec![String::from("hi")]), expected_pos);
+    let expected_res = PositionBuffer::new(
+        Utf8Buffer::from(vec![String::from("hi")]),
+        expected_pos,
+    );
     let sut = PositionBuffer::new(
         Utf8Buffer::from(vec![String::from("h")]),
         CursorPosition::new(1, 0),
@@ -43,8 +47,10 @@ fn insert_grapheme_in_mol() {
     // Given
     let grapheme = 'i';
     let expected_pos = CursorPosition::new(2, 0);
-    let expected_res =
-        PositionBuffer::new(Utf8Buffer::from(vec![String::from("hi.")]), expected_pos);
+    let expected_res = PositionBuffer::new(
+        Utf8Buffer::from(vec![String::from("hi.")]),
+        expected_pos,
+    );
     let sut = PositionBuffer::new(
         Utf8Buffer::from(vec![String::from("h.")]),
         CursorPosition::new(1, 0),

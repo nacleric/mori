@@ -2,8 +2,8 @@
 mod unit_tests;
 
 use crate::{
-    cursor_position::CursorPosition, interfaces::Buffer, utf8_buffer::direction::Direction,
-    utf8_buffer::Utf8Buffer,
+    cursor_position::CursorPosition, interfaces::Buffer,
+    utf8_buffer::direction::Direction, utf8_buffer::Utf8Buffer,
 };
 use std::cmp::min;
 
@@ -85,7 +85,10 @@ impl PositionBuffer {
             new_pos = self.position;
         } else {
             let new_row = row + 1;
-            new_pos = CursorPosition::new(min(self.buffer.col_count(new_row), col), new_row);
+            new_pos = CursorPosition::new(
+                min(self.buffer.col_count(new_row), col),
+                new_row,
+            );
         }
         self.position = new_pos;
         self
@@ -136,7 +139,10 @@ impl PositionBuffer {
             new_pos = self.position;
         } else {
             let new_row = row - 1;
-            new_pos = CursorPosition::new(min(self.buffer.col_count(new_row), col), new_row);
+            new_pos = CursorPosition::new(
+                min(self.buffer.col_count(new_row), col),
+                new_row,
+            );
         }
         self.position = new_pos;
         self

@@ -1,14 +1,17 @@
-use crate::position_buffer::PositionBuffer;
-use std::io::{Read, Write, stdout, stdin};
-use termion;
+#[cfg(test)]
+mod unit_tests;
 
-#[derive(Debug, Eq, PartialEq)]
-pub struct Screen {
-    data: PositionBuffer,
+struct TerminalSpy {}
+
+impl TerminalSpy {
+    fn new(width: usize, height: usize) -> Self {
+        unimplemented!()
+    }
 }
+struct View {}
 
-impl Screen {
-    pub fn render() {
-        write!(stdout, {})
+impl View {
+    fn new(terminalSpy: TerminalSpy) -> Self {
+        unimplemented!()
     }
 }

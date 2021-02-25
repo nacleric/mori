@@ -5,6 +5,7 @@ mod cursor_position;
 mod error;
 mod position_buffer;
 mod utf8_buffer;
+mod view;
 
 use cli_args::CliArgs;
 // use std::io;
