@@ -1,17 +1,25 @@
 #[cfg(test)]
 mod unit_tests;
 
-struct TerminalSpy {}
+const WIDTH: usize = 80;
+const HEIGHT: usize = 25;
 
-impl TerminalSpy {
-    fn new(width: usize, height: usize) -> Self {
-        unimplemented!()
+struct MockTerminal {
+    data: [[None; WIDTH]; HEIGHT],
+}
+
+impl MockTerminal {
+    fn new() -> Self {
+        Self {
+            data: [[None; WIDTH]; HEIGHT],
+        }
     }
 }
-struct View {}
 
-impl View {
-    fn new(terminalSpy: TerminalSpy) -> Self {
+struct Terminal {}
+
+impl Terminal {
+    fn new(mockterminal: MockTerminal) -> Self {
         unimplemented!()
     }
 }

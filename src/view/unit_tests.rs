@@ -3,16 +3,14 @@ use super::*;
 #[test]
 fn new__clears_entire_terminal() {
     // Given
-    const WIDTH: usize = 80;
-    const HEIGHT: usize = 25;
-    let expected_view_state = [[' '; WIDTH]; HEIGHT];
+    let expected_terminal_state = [[' '; WIDTH]; HEIGHT];
     // fake_terminal (mock, fake, spy, stub)
-    let terminal_spy = TerminalSpy::new(WIDTH, HEIGHT);
-    let sut = View::new;
+    let mock_terminal = MockTerminal::new();
+    let sut = Terminal::new;
 
     // When
     // Constructor dependency injection
-    let res = sut(terminal_spy);
+    let res = sut(mock_terminal);
 
     // Then
     assert!(res.is_ok());
