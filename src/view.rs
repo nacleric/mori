@@ -1,11 +1,14 @@
+use crate::interfaces::Terminal;
+
 #[cfg(test)]
 mod unit_tests;
 
 const WIDTH: usize = 80;
 const HEIGHT: usize = 25;
 
+// Note: Declare an array [T; arr_len] Declare 2darray: [[T; arr_len]; arr_len]
 struct MockTerminal {
-    data: [[None; WIDTH]; HEIGHT],
+    data: [[Option<char>; WIDTH]; HEIGHT],
 }
 
 impl MockTerminal {
@@ -14,12 +17,14 @@ impl MockTerminal {
             data: [[None; WIDTH]; HEIGHT],
         }
     }
+
+    fn content(&self) -> [[Option<char>; WIDTH]; HEIGHT] {
+        self.data
+    }
 }
 
-struct Terminal {}
-
-impl Terminal {
-    fn new(mockterminal: MockTerminal) -> Self {
+impl Terminal for MockTerminal {
+    fn clear(&mut self) {
         unimplemented!()
     }
 }
