@@ -3,12 +3,12 @@ mod unit_tests;
 
 pub mod direction;
 
-use crate::{consts::*, interfaces::Buffer};
+use crate::{consts::*, interfaces::RowBuffer};
 use non_empty_vec::NonEmpty;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Utf8Buffer {
-    rows: NonEmpty<<Self as Buffer>::Row>,
+    rows: NonEmpty<<Self as RowBuffer>::Row>,
 }
 
 impl Utf8Buffer {
@@ -17,7 +17,7 @@ impl Utf8Buffer {
     }
 }
 
-impl Buffer for Utf8Buffer {
+impl RowBuffer for Utf8Buffer {
     type Row = String;
 
     fn col_count(&self, row_index: usize) -> usize {

@@ -1,30 +1,46 @@
-use crate::interfaces::Terminal;
-
 #[cfg(test)]
 mod unit_tests;
 
-const WIDTH: usize = 80;
-const HEIGHT: usize = 25;
+use crate::{
+    consts::{HEIGHT, WIDTH},
+    interfaces::{Terminal, ViewBuffer},
+};
 
-// Note: Declare an array [T; arr_len] Declare 2darray: [[T; arr_len]; arr_len]
-struct MockTerminal {
-    data: [[Option<char>; WIDTH]; HEIGHT],
+pub struct MockView {
+    buffer: [[Option<char>; WIDTH]; HEIGHT],
 }
 
-impl MockTerminal {
-    fn new() -> Self {
+impl MockView {
+    pub fn new() -> Self {
         Self {
-            data: [[None; WIDTH]; HEIGHT],
+            buffer: [[None; WIDTH]; HEIGHT],
         }
     }
+}
 
-    fn content(&self) -> [[Option<char>; WIDTH]; HEIGHT] {
-        self.data
+impl ViewBuffer for MockView {
+    fn clear(&mut self) {
+        self.buffer = [[None; WIDTH]; HEIGHT];
     }
 }
 
-impl Terminal for MockTerminal {
+pub struct View<B> {
+    buffer: B,
+}
+
+impl<B: ViewBuffer> View<B> {
+    pub fn new(buffer: B) -> Self {
+        Self { buffer }
+    }
+
+//     pub fn contents(&self) -> &B {
+//         let buf = &self.buffer;
+//         buf
+//     }
+}
+
+impl<B: ViewBuffer> Terminal for View<B> {
     fn clear(&mut self) {
-        unimplemented!()
+        self.buffer.clear()
     }
 }

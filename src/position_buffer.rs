@@ -2,7 +2,7 @@
 mod unit_tests;
 
 use crate::{
-    cursor_position::CursorPosition, interfaces::Buffer,
+    cursor_position::CursorPosition, interfaces::RowBuffer,
     utf8_buffer::direction::Direction, utf8_buffer::Utf8Buffer,
 };
 use std::cmp::min;

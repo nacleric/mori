@@ -2,4 +2,4 @@
 
 use super::*;
 
-mod mock_terminal;
+mod mock_view;
