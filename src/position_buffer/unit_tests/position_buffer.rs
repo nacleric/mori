@@ -6,8 +6,7 @@ fn new__returns_position_buffer() {
     // Given
     let buf = Utf8Buffer::new();
     let pos = CursorPosition::default();
-    let expected_res =
-        PositionBuffer::new(Utf8Buffer::new(), CursorPosition::default());
+    let expected_res = PositionBuffer::new(Utf8Buffer::new(), CursorPosition::default());
     let sut = PositionBuffer::new;
 
     // When

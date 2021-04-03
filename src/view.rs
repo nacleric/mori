@@ -6,6 +6,7 @@ use crate::{
     interfaces::{Terminal, ViewBuffer},
 };
 
+#[derive(Clone, Debug, PartialEq)]
 pub struct MockView {
     buffer: [[Option<char>; WIDTH]; HEIGHT],
 }
@@ -20,7 +21,11 @@ impl MockView {
 
 impl ViewBuffer for MockView {
     fn clear(&mut self) {
-        self.buffer = [[None; WIDTH]; HEIGHT];
+        self.buffer = [[Some(' '); WIDTH]; HEIGHT];
+    }
+
+    fn contents(&self) -> [[Option<char>; WIDTH]; HEIGHT] {
+        self.buffer
     }
 }
 
@@ -28,15 +33,18 @@ pub struct View<B> {
     buffer: B,
 }
 
-impl<B: ViewBuffer> View<B> {
+impl<B: ViewBuffer> View<B>
+where
+    B: Clone,
+{
     pub fn new(buffer: B) -> Self {
         Self { buffer }
     }
 
-//     pub fn contents(&self) -> &B {
-//         let buf = &self.buffer;
-//         buf
-//     }
+    pub fn buffer(&self) -> B {
+        let buf = self.buffer.clone();
+        buf
+    }
 }
 
 impl<B: ViewBuffer> Terminal for View<B> {
