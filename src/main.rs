@@ -7,21 +7,19 @@ mod position_buffer;
 mod utf8_buffer;
 mod view;
 
-use cli_args::CliArgs;
+// use cli_args::CliArgs;
 // use std::io;
-use crate::utf8_buffer::Utf8Buffer;
-use structopt::StructOpt;
+use crate::view::{Terminal, MockTerminalBuffer};
+// use structopt::StructOpt;
 
 pub mod interfaces;
 pub use error::{Error, Result};
+use interfaces::View;
 
 // TODO: Read filepath and insert row_content into buffer
-fn main() -> Result<()> {
-    let filepath = CliArgs::from_args();
-    // TODO: remove underscores eventually
-    let _data = std::fs::read_to_string(filepath.path)?;
-    let mut _buf = Utf8Buffer::new();
-
-    // initialize_buffer(data)
-    unimplemented!()
+fn main() {
+    let mock_view = MockTerminalBuffer::new();
+    let mut terminal = Terminal::new(mock_view);
+    terminal.clear();
+    // unimplemented!()
 }
