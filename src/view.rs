@@ -13,11 +13,11 @@ use crate::{
 };
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct MockTerminalBuffer {
+pub struct MockTerminalView {
     data: [[Option<char>; WIDTH]; HEIGHT],
 }
 
-impl MockTerminalBuffer {
+impl MockTerminalView {
     pub fn new() -> Self {
         Self {
             data: [[None; WIDTH]; HEIGHT],
@@ -25,7 +25,7 @@ impl MockTerminalBuffer {
     }
 }
 
-impl ViewBuffer for MockTerminalBuffer {
+impl ViewBuffer for MockTerminalView {
     fn clear(&mut self) {
         self.data = [[Some(' '); WIDTH]; HEIGHT];
     }
@@ -48,27 +48,27 @@ impl ViewBuffer for TerminalBuffer {
     }
 }
 
-pub struct Terminal<B> {
-    buffer: B,
+pub struct Terminal<View> {
+    view: View,
     // input:
     output: RawTerminal<Stdout>,
 }
 
-impl<B: ViewBuffer> Terminal<B>
+impl<View: ViewBuffer> Terminal<View>
 where
-    B: Clone,
+    View: Clone,
 {
-    pub fn new(buffer: B) -> Self {
+    pub fn new(view: View) -> Self {
         let stdout = stdout().into_raw_mode().unwrap();
         Self {
-            buffer,
+            view,
             output: stdout,
         }
     }
 
-    pub fn buffer(&self) -> &B {
-        let buf = &self.buffer;
-        buf
+    pub fn view(&self) -> &View {
+        let view = &self.view;
+        view
     }
 }
 
