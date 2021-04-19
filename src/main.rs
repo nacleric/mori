@@ -7,19 +7,21 @@ mod position_buffer;
 mod utf8_buffer;
 mod view;
 
-// use cli_args::CliArgs;
-// use std::io;
-use crate::view::{Terminal, MockTerminalView};
-// use structopt::StructOpt;
-
 pub mod interfaces;
 pub use error::{Error, Result};
-use interfaces::View;
+
+// use cli_args::CliArgs;
+// use std::io;
+use crate::{
+    interfaces::View,
+    view::{mock_terminal::MockTerminalView, Terminal},
+};
+// use structopt::StructOpt;
 
 // TODO: Read filepath and insert row_content into view
 fn main() {
-    let mock_view = MockTerminalView::new();
-    let mut terminal = Terminal::new(mock_view);
+    let mock_view = MockTerminalView::new(); // TODO: This line is pretty useless, fix the api
+    let ui_lib = Termion::new(); // TODO: make a termion class
+    let mut terminal = Terminal::new(mock_view, ui_lib);
     terminal.clear();
-    // unimplemented!()
 }

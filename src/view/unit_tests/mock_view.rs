@@ -13,8 +13,7 @@ fn new__clears_entire_view() {
     sut.clear();
 
     // Then
-    // assert_eq!(res.unwrap().view().view(), expected_view_state);
-    assert_eq!(sut.view().contents(), expected_view_state);
+    assert_eq!(sut.view().get_data(), expected_view_state);
 }
 
 // #[test]
