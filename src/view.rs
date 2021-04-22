@@ -2,17 +2,13 @@
 mod unit_tests;
 
 pub mod mock_terminal; // TODO: change this back to private
-pub mod termion_wrapper;
+pub mod termion_adapter;
 
-use std::io::{stdin, stdout, Stdout, Write};
-use termion::{
-    self,
-    raw::{IntoRawMode, RawTerminal},
-};
 use crate::{
     consts::{HEIGHT, WIDTH},
-    interfaces::{UIActions, View, ViewBuffer},
+    interfaces::{TtyControl, View, ViewBuffer},
 };
+use std::io::{stdout, Stdout, Write};
 
 // TODO: Will have to be changed
 pub struct TerminalBuffer {
@@ -25,33 +21,32 @@ impl ViewBuffer for TerminalBuffer {
     }
 }
 
-pub struct Terminal<B, UI: UIActions> {
-    view: B,
-    ui: Option<UI>,
+pub struct Terminal<VB, TC: TtyControl> {
+    view_buffer: VB,
+    tty_control: TC,
     // input:
-    output: RawTerminal<Stdout>,
+    output: Stdout,
 }
 
-impl<B: ViewBuffer, UI: UIActions> Terminal<B, UI>
+impl<VB, TC: TtyControl> Terminal<VB, TC>
 where
-    B: Clone,
+    VB: ViewBuffer + Clone,
 {
-    pub fn new(view: B, ui: Option<UI>) -> Self {
-        let stdout = stdout().into_raw_mode().unwrap();
+    pub fn new(view: VB, tty_control: TC) -> Self {
+        let stdout = stdout();
         Self {
-            view,
-            ui,
+            view_buffer: view,
+            tty_control,
             output: stdout,
         }
     }
 
-    pub fn view(&self) -> &B {
-        let view = &self.view;
-        view
+    pub fn view_buffer(&self) -> &VB {
+        &self.view_buffer
     }
 }
 
-impl<B: ViewBuffer, UI: UIActions> View for Terminal<B, UI> {
+impl<B: ViewBuffer, TC: TtyControl> View for Terminal<B, TC> {
     fn clear(&mut self) {
         write!(self.output, "{}", termion::clear::All).unwrap();
         self.output.flush().unwrap();

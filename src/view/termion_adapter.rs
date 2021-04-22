@@ -1,15 +1,15 @@
-use crate::interfaces::UIActions;
+use crate::interfaces::TtyControl;
 
 #[derive(Debug, Default)]
-pub struct TermionWrapper {}
+pub struct TermionAdapter {}
 
-impl TermionWrapper {
+impl TermionAdapter {
     pub fn new() -> Self {
         Self::default()
     }
 }
 
-impl UIActions for TermionWrapper {
+impl TtyControl for TermionAdapter {
     fn clear(&mut self) {
         unimplemented!()
     }

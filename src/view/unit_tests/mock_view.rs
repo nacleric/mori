@@ -1,7 +1,7 @@
 use super::*;
 use crate::{
-    interfaces::UIActions,
     view::mock_terminal::MockTerminalView};
+use crate::view::termion_adapter::TermionAdapter;
 
 // Ask Brad about Constructor dependency injection
 #[test]
@@ -10,13 +10,13 @@ fn new__clears_entire_view() {
     let expected_view_state = [[None; WIDTH]; HEIGHT];
     // fake_view (mock, fake, spy, stub)
     let mock_view = MockTerminalView::new();
-    let mut sut= Terminal::new(mock_view, None);
+    let mut sut= Terminal::new(mock_view, TermionAdapter::new());
 
     // When
     sut.clear();
 
     // Then
-    assert_eq!(sut.view().get_data(), expected_view_state);
+    assert_eq!(sut.view_buffer().get_data(), expected_view_state);
 }
 
 // #[test]

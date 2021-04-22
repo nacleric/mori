@@ -1,4 +1,4 @@
-pub trait UIActions {
+pub trait TtyControl {
     fn clear(&mut self);
     fn draw(&mut self);
     fn resize(&mut self);
