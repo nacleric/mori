@@ -1,5 +1,7 @@
+use crate::model::cursor_position::CursorPosition;
+use crate::model::utf8_buffer::Utf8Buffer;
+
 use super::*;
-use crate::{cursor_position::CursorPosition, utf8_buffer::Utf8Buffer};
 
 #[test]
 fn insert_grapheme_in_empty_buffer() {

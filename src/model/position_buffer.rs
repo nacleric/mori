@@ -1,11 +1,18 @@
-#[cfg(test)]
-mod unit_tests;
+use std::cmp::min;
 
 use crate::{
-    cursor_position::CursorPosition, interfaces::RowBuffer, utf8_buffer::direction::Direction,
-    utf8_buffer::Utf8Buffer,
+    interfaces::RowBuffer,
+    model::{
+        utf8_buffer::{
+            direction::Direction,
+            Utf8Buffer
+        }
+    },
 };
-use std::cmp::min;
+use crate::model::cursor_position::CursorPosition;
+
+#[cfg(test)]
+mod unit_tests;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct PositionBuffer {

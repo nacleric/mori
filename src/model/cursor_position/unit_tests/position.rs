@@ -1,4 +1,4 @@
-use crate::cursor_position::CursorPosition;
+use crate::model::cursor_position::CursorPosition;
 
 #[test]
 fn default__returns_col_0_row_0() {

@@ -1,22 +1,19 @@
-#![allow(dead_code)]
-mod cli_args;
-mod consts;
-mod cursor_position;
-mod error;
-mod position_buffer;
-mod utf8_buffer;
-mod view;
-
-pub mod interfaces;
 pub use error::{Error, Result};
 
 // use cli_args::CliArgs;
 // use std::io;
 use crate::{
     interfaces::View,
-    view::{mock_terminal::MockTerminalView, termion_adapter::TermionAdapter, Terminal},
+    view::{mock_terminal::MockTerminalView, Terminal, termion_adapter::TermionAdapter},
 };
-// use structopt::StructOpt;
+
+mod consts;
+mod error;
+mod model;
+mod view;
+
+
+pub mod interfaces;
 
 // TODO: Read filepath and insert row_content into view
 fn main() {

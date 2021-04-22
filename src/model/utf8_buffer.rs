@@ -1,7 +1,7 @@
+pub mod direction;
+
 #[cfg(test)]
 mod unit_tests;
-
-pub mod direction;
 
 use crate::{consts::*, interfaces::RowBuffer};
 use non_empty_vec::NonEmpty;
