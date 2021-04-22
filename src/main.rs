@@ -12,7 +12,6 @@ mod error;
 mod model;
 mod view;
 
-
 pub mod interfaces;
 
 // TODO: Read filepath and insert row_content into view
