@@ -46,10 +46,13 @@ where
     }
 }
 
+// TODO: ask Brad to review this
 impl<B: ViewBuffer, TC: TtyControl> View for Terminal<B, TC> {
-    fn clear(&mut self) {
-        write!(self.output, "{}", termion::clear::All).unwrap();
-        self.output.flush().unwrap();
+    fn clear(&mut self) -> Result<(), std::io::Error>{
+        match write!(self.output, "{}", termion::clear::All) {
+            Ok(_) => self.output.flush(),
+            Err(e) => panic!("Problem writing to screen: {:?}", e),
+        }
     }
 
     fn print(&mut self) {
