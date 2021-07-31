@@ -1,3 +1,5 @@
+// Handles the actual window screen
+// TODO: WindowControl might be better name
 pub trait TtyControl {
     fn clear(&mut self);
     fn draw(&mut self);
