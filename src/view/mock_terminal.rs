@@ -23,9 +23,3 @@ impl MockTerminalView {
         self.data = data;
     }
 }
-
-impl ViewBuffer for MockTerminalView {
-    fn clear(&mut self) {
-        self.set_data([[None; WIDTH]; HEIGHT]);
-    }
-}

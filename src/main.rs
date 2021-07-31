@@ -4,7 +4,7 @@ pub use error::{Error, Result};
 
 use crate::{
     interfaces::View,
-    view::{mock_terminal::MockTerminalView, Terminal, termion_adapter::TermionAdapter},
+    view::{mock_terminal::MockTerminalView, termion_adapter::TermionAdapter, Terminal},
 };
 
 mod consts;
@@ -17,7 +17,7 @@ pub mod interfaces;
 fn main() -> Result<(), std::io::Error> {
     let mock_view = MockTerminalView::new(); // TODO: This line is pretty useless, fix the api
     let termion = TermionAdapter::new();
-    let mut terminal = Terminal::new(mock_view, termion);
-    terminal.clear()?;
+    // let mut terminal = Terminal::new(mock_view, termion);
+    // terminal.clear()?;
     Ok(())
 }
