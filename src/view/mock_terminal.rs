@@ -2,7 +2,7 @@ use crate::{
     consts::{HEIGHT, WIDTH},
 };
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct MockTerminalView {
     data: [[Option<char>; WIDTH]; HEIGHT],
 }

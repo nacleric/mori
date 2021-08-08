@@ -6,10 +6,11 @@ pub mod termion_adapter;
 
 use crate::{
     consts::{HEIGHT, WIDTH},
-    interfaces::View,
+    interfaces::{TtyControl, View},
 };
 use std::io::{stdout, Stdout, Write};
 
+#[derive(Debug)]
 // We can handle inputs later, need output for tests
 pub struct Terminal {
     // input:
@@ -25,15 +26,26 @@ impl Terminal {
     }
 }
 
-impl View for Terminal {
-    fn clear(&mut self) -> Result<(), std::io::Error> {
-        match write!(self.output, "{}", termion::clear::All) {
-            Ok(_) => self.output.flush(),
-            Err(e) => panic!("Problem writing to screen: {:?}", e),
-        }
-    }
+// OLD CODE REDO
+// impl<TC: TtyControl> Terminal<TC: TtyControl> {
+//     pub fn new(tty_control: TC) -> Self {
+//         let stdout = stdout();
+//         Self {
+//             tty_control,
+//             output: stdout,
+//         }
+//     }
+// }
 
-    fn print(&mut self) {
-        unimplemented!();
-    }
-}
+// impl View for Terminal {
+//     fn clear(&mut self) -> Result<(), std::io::Error> {
+//         match write!(self.output, "{}", termion::clear::All) {
+//             Ok(_) => self.output.flush(),
+//             Err(e) => panic!("Problem writing to screen: {:?}", e),
+//         }
+//     }
+
+//     fn print(&mut self) {
+//         unimplemented!();
+//     }
+// }

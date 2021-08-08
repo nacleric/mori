@@ -1,21 +1,32 @@
+use termion::clear;
 use crate::interfaces::TtyControl;
 
-#[derive(Debug, Default)]
-pub struct TermionAdapter {}
+use super::Terminal;
+
+#[derive(Debug)]
+pub struct TermionAdapter {
+    terminal: Terminal,
+}
 
 impl TermionAdapter {
     pub fn new() -> Self {
-        Self::default()
+        Self {
+            terminal: Terminal::new(),
+        }
     }
 }
 
 impl TtyControl for TermionAdapter {
     fn clear(&mut self) {
-        unimplemented!()
+        println!("{}", clear::All);
     }
 
     fn draw(&mut self) {
         unimplemented!()
+    }
+
+    fn render_frame(&mut self) {
+        unimplemented!()    
     }
 
     fn resize(&mut self) {
