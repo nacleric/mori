@@ -14,6 +14,10 @@ impl TermionAdapter {
             terminal: Terminal::new(),
         }
     }
+
+    pub fn set_terminal(&mut self, terminal: Terminal) {
+        self.terminal = terminal
+    }
 }
 
 impl TtyControl for TermionAdapter {

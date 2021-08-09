@@ -8,19 +8,22 @@ use crate::{
     consts::{HEIGHT, WIDTH},
     interfaces::{TtyControl, View},
 };
-use std::io::{stdout, Stdout, Write};
+use std::io::{Stdin, Stdout, Write, stdin, stdout};
 
 #[derive(Debug)]
 // We can handle inputs later, need output for tests
 pub struct Terminal {
     // input:
+    input: Stdin,
     output: Stdout,
 }
 
 impl Terminal {
     pub fn new() -> Self {
+        let stdin = stdin();
         let stdout = stdout();
         Self {
+            input: stdin,
             output: stdout,
         }
     }

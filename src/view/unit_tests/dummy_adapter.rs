@@ -34,16 +34,12 @@ fn test_tty_commands<T: TtyControl>(terminal: &mut T) {
 }
 
 // Test is kinda useless for now, mostly wanted to see how the adapter would work
-// Maybe doesn't need &mut?
 #[test]
 fn dummy_adapter_allows_terminal_access_to_tty_interface() {
     // Given
-    let dummy_terminal = Terminal::new();
-    let dummy_tty_adapter = &mut TtyControlDummyAdapter {
-        terminal: dummy_terminal
-    };
-    let expected_res = test_tty_commands(dummy_tty_adapter);
-    let sut = dummy_tty_adapter;
+    let terminal = &mut TtyControlDummyAdapter::new();
+    let expected_res = test_tty_commands(terminal);
+    let sut = terminal;
 
     // When
     let res = test_tty_commands(sut);
