@@ -11,29 +11,29 @@ mod unit_tests;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct PositionBuffer {
-    buffer: Utf8Buffer,
+    data: Utf8Buffer,
     position: CursorPosition,
 }
 
 impl PositionBuffer {
     pub fn new(buffer: Utf8Buffer, position: CursorPosition) -> Self {
-        Self { buffer, position }
+        Self { data: buffer, position }
     }
 
     pub fn delete_grapheme(&mut self, direction: Direction) -> Option<char> {
         let (col, row) = self.position.as_tuple();
-        let eol = self.buffer.col_count(row);
+        let eol = self.data.col_count(row);
         match direction {
             Direction::Backward => {
                 if col != 0 {
                     self.move_left();
                     let deleted_char = self
-                        .buffer
+                        .data
                         .edit_row(row)
                         .expect("could not get row contents")
                         .chars()
                         .nth(col.saturating_sub(1));
-                    self.buffer
+                    self.data
                         .edit_row(row)
                         .expect("could not get row contents")
                         .remove(col.saturating_sub(1));
@@ -45,12 +45,12 @@ impl PositionBuffer {
             Direction::Forward => {
                 if col != eol {
                     let deleted_char = self
-                        .buffer
+                        .data
                         .edit_row(row)
                         .expect("could not get row contents")
                         .chars()
                         .nth(col);
-                    self.buffer
+                    self.data
                         .edit_row(row)
                         .expect("could not get row contents")
                         .remove(col);
@@ -71,7 +71,7 @@ impl PositionBuffer {
         let (col, row) = self.position.as_tuple();
         // let index = self.index();
         // self.rows[row].insert(index, grapheme);
-        self.buffer
+        self.data
             .edit_row(row)
             .expect("could not get row")
             .insert(col, grapheme);
@@ -80,14 +80,14 @@ impl PositionBuffer {
 
     pub fn move_down(&mut self) -> &mut Self {
         let (col, row) = self.position.as_tuple();
-        let max_row = self.buffer.row_count() - 1;
+        let max_row = self.data.row_count() - 1;
 
         let new_pos: CursorPosition;
         if row == max_row {
             new_pos = self.position;
         } else {
             let new_row = row + 1;
-            new_pos = CursorPosition::new(min(self.buffer.col_count(new_row), col), new_row);
+            new_pos = CursorPosition::new(min(self.data.col_count(new_row), col), new_row);
         }
         self.position = new_pos;
         self
@@ -95,7 +95,7 @@ impl PositionBuffer {
 
     pub fn move_left(&mut self) -> &mut Self {
         let (col, row) = self.position.as_tuple();
-        let eol = self.buffer.col_count(row);
+        let eol = self.data.col_count(row);
 
         let new_pos: CursorPosition;
         if col == 0 {
@@ -113,8 +113,8 @@ impl PositionBuffer {
 
     pub fn move_right(&mut self) -> &mut Self {
         let (col, row) = self.position.as_tuple();
-        let max_row = self.buffer.row_count() - 1;
-        let eol = self.buffer.col_count(row);
+        let max_row = self.data.row_count() - 1;
+        let eol = self.data.col_count(row);
 
         let new_pos: CursorPosition;
         if col == eol {
@@ -138,7 +138,7 @@ impl PositionBuffer {
             new_pos = self.position;
         } else {
             let new_row = row - 1;
-            new_pos = CursorPosition::new(min(self.buffer.col_count(new_row), col), new_row);
+            new_pos = CursorPosition::new(min(self.data.col_count(new_row), col), new_row);
         }
         self.position = new_pos;
         self
@@ -148,8 +148,12 @@ impl PositionBuffer {
 impl Default for PositionBuffer {
     fn default() -> Self {
         Self {
-            buffer: Utf8Buffer::default(),
+            data: Utf8Buffer::default(),
             position: CursorPosition::default(),
         }
     }
+}
+
+impl Display for PositionBuffer {
+    // WIP: need Position Buffer to be represented in bytes for stdout?
 }

@@ -16,10 +16,11 @@ mod view;
 
 pub mod interfaces;
 
-fn main() -> Result<(), std::io::Error> {
-    // let utf8_buffer = PositionBuffer::new(Utf8Buffer::new(), CursorPosition::default());
+fn main() -> Result<()> {
+    let test_utf8_buffer = Utf8Buffer::from(vec![String::from("hello"), String::from("world")]);
+    let main_buffer = PositionBuffer::new(test_utf8_buffer, CursorPosition::default());
     // TODO: Utf8Buffer will read from a file instead of new()
-    let mut terminal = TermionAdapter::new();
-    terminal.clear();
+    let mut display = TermionAdapter::new(Terminal::default());
+    display.clear_screen()?;
     Ok(())
 }

@@ -8,15 +8,19 @@ pub struct TtyControlDummyAdapter {
 impl TtyControlDummyAdapter {
     pub fn new() -> Self {
         Self {
-            terminal: Terminal::new(),
+            terminal: Terminal::default(),
         }
     }
 }
 
 impl TtyControl for TtyControlDummyAdapter {
-    fn clear(&mut self) {}
+    fn clear_screen(&mut self) -> Result<(), std::io::Error> {
+        unimplemented!();
+    }
 
     fn draw(&mut self) {}
+
+    fn print(&mut self) {}
 
     fn render_frame(&mut self) {}
     
@@ -25,12 +29,13 @@ impl TtyControl for TtyControlDummyAdapter {
     fn set_color(&mut self) {}
 }
 
-fn test_tty_commands<T: TtyControl>(terminal: &mut T) {
-    terminal.clear();
-    terminal.draw();
-    terminal.render_frame();
-    terminal.resize();
-    terminal.set_color();
+fn test_tty_commands<T: TtyControl>(display: &mut T) {
+    display.clear_screen();
+    display.draw();
+    display.print();
+    display.render_frame();
+    display.resize();
+    display.set_color();
 }
 
 // Test is kinda useless for now, mostly wanted to see how the adapter would work
