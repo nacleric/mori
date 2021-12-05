@@ -2,7 +2,6 @@
 mod unit_tests;
 
 use crate::{
-    consts::{HEIGHT, WIDTH},
     model::position_buffer::PositionBuffer,
 };
 use termion::clear;

@@ -4,6 +4,7 @@ pub mod direction;
 mod unit_tests;
 
 use crate::{consts::*, interfaces::RowBuffer};
+
 use non_empty_vec::NonEmpty;
 
 #[derive(Debug, Eq, PartialEq)]
