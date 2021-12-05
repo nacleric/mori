@@ -1,26 +1,23 @@
 pub use error::{Error, Result};
 
-// use cli_args::CliArgs;
 use crate::{
-    interfaces::{TtyControl, View},
     model::{
         cursor_position::CursorPosition, position_buffer::PositionBuffer, utf8_buffer::Utf8Buffer,
     },
-    view::{mock_terminal::MockTerminalView, termion_adapter::TermionAdapter, Terminal},
+    view::Terminal,
 };
 
 mod consts;
 mod error;
+mod interfaces;
 mod model;
 mod view;
-
-pub mod interfaces;
 
 fn main() -> Result<()> {
     let test_utf8_buffer = Utf8Buffer::from(vec![String::from("hello"), String::from("world")]);
     let main_buffer = PositionBuffer::new(test_utf8_buffer, CursorPosition::default());
     // TODO: Utf8Buffer will read from a file instead of new()
-    let mut display = TermionAdapter::new(Terminal::default());
+    let mut display = Terminal::default();
     display.clear_screen()?;
     Ok(())
 }

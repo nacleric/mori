@@ -25,8 +25,6 @@ impl CursorPosition {
     }
 }
 
-// TODO: front-end will lie because coordinates need to start at 1 and not 0;
-// Cursor will default to (0,0)
 impl Default for CursorPosition {
     fn default() -> Self {
         Self {

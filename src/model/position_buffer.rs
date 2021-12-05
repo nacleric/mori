@@ -17,7 +17,10 @@ pub struct PositionBuffer {
 
 impl PositionBuffer {
     pub fn new(buffer: Utf8Buffer, position: CursorPosition) -> Self {
-        Self { data: buffer, position }
+        Self {
+            data: buffer,
+            position,
+        }
     }
 
     pub fn delete_grapheme(&mut self, direction: Direction) -> Option<char> {
@@ -152,8 +155,4 @@ impl Default for PositionBuffer {
             position: CursorPosition::default(),
         }
     }
-}
-
-impl Display for PositionBuffer {
-    // WIP: need Position Buffer to be represented in bytes for stdout?
 }

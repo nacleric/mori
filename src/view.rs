@@ -1,14 +1,12 @@
 #[cfg(test)]
 mod unit_tests;
 
-pub mod mock_terminal; // TODO: change this back to private
-pub mod termion_adapter;
-
 use crate::{
     consts::{HEIGHT, WIDTH},
-    interfaces::{TtyControl, View},
     model::position_buffer::PositionBuffer,
 };
+use termion::clear;
+
 use std::io::{stdin, stdout, Stdin, Stdout, Write};
 
 #[derive(Debug)]
@@ -27,6 +25,33 @@ impl Terminal {
             input: stdin,
             output: stdout,
         }
+    }
+
+    pub fn clear_screen(&mut self) -> Result<(), std::io::Error> {
+        match write!(self.output, "{}", clear::All) {
+            Ok(_) => self.output.flush(),
+            Err(e) => panic!("Problem clearing the screen: {:?}", e),
+        }
+    }
+
+    pub fn draw(&mut self) {
+        unimplemented!()
+    }
+
+    pub fn print(&mut self) {
+        unimplemented!()
+    }
+
+    pub fn render_frame(&mut self) {
+        unimplemented!()
+    }
+
+    pub fn resize(&mut self) {
+        unimplemented!()
+    }
+
+    pub fn set_color(&mut self) {
+        unimplemented!()
     }
 }
 
