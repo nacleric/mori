@@ -17,13 +17,13 @@ use crate::{
 use std::io::{self, stdout};
 
 fn main() -> Result<()> {
+    /*
     let test_utf8_buffer = Utf8Buffer::from(vec![String::from("hello"), String::from("world")]);
     let main_buffer = PositionBuffer::new(test_utf8_buffer, CursorPosition::default());
     // TODO: Utf8Buffer will read from a file instead of new()
     let mut display = Terminal::default();
     display.clear_screen()?;
-
-    let editor = Editor::default();
-    editor.run();
+*/
+    Editor::default().run();
     Ok(())
 }
