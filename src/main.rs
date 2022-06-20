@@ -4,6 +4,7 @@ mod error;
 mod interfaces;
 mod model;
 mod terminal;
+mod tests;
 
 use crate::{editor::Editor, error::Result};
 

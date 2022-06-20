@@ -1,6 +1,3 @@
-#[cfg(test)]
-mod unit_tests;
-
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct CursorPosition {
     col: usize,

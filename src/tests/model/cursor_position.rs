@@ -12,8 +12,8 @@ fn default__returns_col_0_row_0() {
     let res = sut();
 
     // Then
-    assert_eq!(res.col, expected_col);
-    assert_eq!(res.row, expected_row);
+    assert_eq!(res.col(), expected_col);
+    assert_eq!(res.row(), expected_row);
     assert_eq!(res.as_tuple(), expected_tuple);
 }
 
@@ -29,7 +29,7 @@ fn new__returns_expected_col_row() {
     let res = sut(expected_col, expected_row);
 
     // Then
-    assert_eq!(res.col, expected_col);
-    assert_eq!(res.row, expected_row);
+    assert_eq!(res.col(), expected_col);
+    assert_eq!(res.row(), expected_row);
     assert_eq!(res.as_tuple(), expected_tuple);
 }
