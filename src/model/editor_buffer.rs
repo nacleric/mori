@@ -10,12 +10,12 @@ use crate::{
 mod unit_tests;
 
 #[derive(Debug, Eq, PartialEq)]
-pub struct PositionBuffer {
+pub struct EditorBuffer {
     data: Utf8Buffer,
     position: CursorPosition,
 }
 
-impl PositionBuffer {
+impl EditorBuffer {
     pub fn new(buffer: Utf8Buffer, position: CursorPosition) -> Self {
         Self {
             data: buffer,
@@ -148,7 +148,7 @@ impl PositionBuffer {
     }
 }
 
-impl Default for PositionBuffer {
+impl Default for EditorBuffer {
     fn default() -> Self {
         Self {
             data: Utf8Buffer::default(),
