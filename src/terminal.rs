@@ -62,5 +62,4 @@ impl Terminal {
     pub fn clear_current_line() {
         print!("{}", termion::clear::CurrentLine);
     }
-
 }

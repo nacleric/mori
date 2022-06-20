@@ -5,11 +5,7 @@ mod interfaces;
 mod model;
 mod terminal;
 
-use crate::{
-    editor::Editor,
-    error::{Result},
-};
-
+use crate::{editor::Editor, error::Result};
 
 fn main() -> Result<()> {
     Editor::default().run();

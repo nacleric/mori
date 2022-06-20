@@ -1,7 +1,6 @@
-use crate::terminal::Terminal;
 use crate::consts::VERSION;
+use crate::terminal::Terminal;
 use termion::event::Key;
-
 
 pub struct Editor {
     should_quit: bool,
@@ -25,7 +24,7 @@ impl Editor {
     }
 
     pub fn default() -> Self {
-        Self { 
+        Self {
             should_quit: false,
             terminal: Terminal::default().expect("Failed to initialize terminal"),
         }
@@ -61,16 +60,15 @@ impl Editor {
             Terminal::clear_current_line();
             if row == height - 2 {
                 let welcome_message = format!("Mori editor -- version {}\r", VERSION);
-                let width = std::cmp::min(self.terminal.size().width as usize, welcome_message.len());
+                let width =
+                    std::cmp::min(self.terminal.size().width as usize, welcome_message.len());
                 println!("{}\r", &welcome_message[..width])
             } else {
                 println!("~\r");
             }
         }
-
     }
 }
-
 
 fn die(e: std::io::Error) {
     Terminal::clear_screen();
