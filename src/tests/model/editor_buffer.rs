@@ -1,6 +1,6 @@
 use crate::model::cursor_position::CursorPosition;
-use crate::model::utf8_buffer::{Direction, Utf8Buffer};
 use crate::model::editor_buffer::EditorBuffer;
+use crate::model::utf8_buffer::{Direction, Utf8Buffer};
 
 #[test]
 fn backward_delete_grapheme_in_empty_buffer_returns_nothing() {
@@ -306,8 +306,7 @@ fn insert_grapheme_in_eol() {
     // Given
     let grapheme = 'i';
     let expected_pos = CursorPosition::new(2, 0);
-    let expected_res =
-        EditorBuffer::new(Utf8Buffer::from(vec![String::from("hi")]), expected_pos);
+    let expected_res = EditorBuffer::new(Utf8Buffer::from(vec![String::from("hi")]), expected_pos);
     let sut = EditorBuffer::new(
         Utf8Buffer::from(vec![String::from("h")]),
         CursorPosition::new(1, 0),
@@ -326,8 +325,7 @@ fn insert_grapheme_in_mol() {
     // Given
     let grapheme = 'i';
     let expected_pos = CursorPosition::new(2, 0);
-    let expected_res =
-        EditorBuffer::new(Utf8Buffer::from(vec![String::from("hi.")]), expected_pos);
+    let expected_res = EditorBuffer::new(Utf8Buffer::from(vec![String::from("hi.")]), expected_pos);
     let sut = EditorBuffer::new(
         Utf8Buffer::from(vec![String::from("h.")]),
         CursorPosition::new(1, 0),

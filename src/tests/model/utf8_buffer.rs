@@ -1,5 +1,5 @@
-use crate::model::utf8_buffer::Utf8Buffer;
 use crate::interfaces::RowBuffer;
+use crate::model::utf8_buffer::Utf8Buffer;
 
 #[test]
 fn append_a_row_to_newly_created_buffer_yields_a_buffer_with_2_rows() {
