@@ -1,11 +1,11 @@
-pub mod direction;
-
-#[cfg(test)]
-mod unit_tests;
-
 use crate::{consts::*, interfaces::RowBuffer};
 
 use non_empty_vec::NonEmpty;
+
+pub enum Direction {
+    Backward,
+    Forward,
+}
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Utf8Buffer {

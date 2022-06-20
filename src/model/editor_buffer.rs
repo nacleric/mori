@@ -3,16 +3,13 @@ use std::cmp::min;
 use crate::model::cursor_position::CursorPosition;
 use crate::{
     interfaces::RowBuffer,
-    model::utf8_buffer::{direction::Direction, Utf8Buffer},
+    model::utf8_buffer::{Direction, Utf8Buffer},
 };
-
-#[cfg(test)]
-mod unit_tests;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct EditorBuffer {
     data: Utf8Buffer,
-    position: CursorPosition,
+    pub position: CursorPosition,
 }
 
 impl EditorBuffer {
